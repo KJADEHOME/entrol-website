@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Allow: /
+
+Sitemap: https://www.entrol.com/sitemap.xml
+
+# Block raw assets
+Disallow: /assets/raw/
