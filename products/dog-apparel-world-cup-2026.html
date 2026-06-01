@@ -324,6 +324,57 @@
       100% { transform: rotate(360deg); }
     }
   </style>
+
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.entrol.com/#organization",
+        "name": "Entrol",
+        "url": "https://www.entrol.com",
+        "logo": "https://www.entrol.com/assets/logo.png"
+      },
+      {
+        "@type": "Product",
+        "@id": "https://www.entrol.com/products/dog-apparel-world-cup-2026.html#product",
+        "name": "World Cup 2026 Dog Apparel Collection",
+        "description": "Custom-designed dog t-shirts, tank tops and jackets celebrating the 2026 FIFA World Cup. 25 unique designs across 6 series (Classic, National Teams, Fun, Coat, Sweater, 2026 Special). OEM/ODM manufacturing with custom branding.",
+        "image": "https://www.entrol.com/assets/images/world-cup-new/OIG3.jpg",
+        "brand": {"@id": "https://www.entrol.com/#organization"},
+        "manufacturer": {"@id": "https://www.entrol.com/#organization"},
+        "category": "Pet Apparel",
+        "offers": {
+          "@type": "AggregateOffer",
+          "availability": "https://schema.org/InStock",
+          "priceCurrency": "USD",
+          "lowPrice": "3.00",
+          "highPrice": "25.00",
+          "offerCount": "25"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.entrol.com/products/dog-apparel-world-cup-2026.html#webpage",
+        "url": "https://www.entrol.com/products/dog-apparel-world-cup-2026.html",
+        "name": "World Cup 2026 Dog Apparel — Entrol | Custom Pet Clothing Manufacturer",
+        "description": "Custom World Cup 2026 themed dog t-shirts and tank tops. OEM/ODM pet apparel manufacturing for brands and retailers.",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.entrol.com/"},
+          {"@type": "ListItem", "position": 2, "name": "Products", "item": "https://www.entrol.com/products.html"},
+          {"@type": "ListItem", "position": 3, "name": "Pet Apparel", "item": "https://www.entrol.com/pet-apparel.html"},
+          {"@type": "ListItem", "position": 4, "name": "World Cup 2026 Dog Apparel", "item": "https://www.entrol.com/products/dog-apparel-world-cup-2026.html"}
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <nav class="nav scrolled">

@@ -35,16 +35,31 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Blog",
-    "name": "Entrol Blog | Pet Product Manufacturing Insights",
-    "description": "Expert insights on sourcing pet products from China, OEM/ODM manufacturing, and building your pet brand.",
-    "url": "https://www.entrol.com/blog.html",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Entrol",
-      "url": "https://www.entrol.com",
-      "logo": "https://www.entrol.com/assets/logo.png"
-    }
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.entrol.com/#organization",
+        "name": "Entrol",
+        "url": "https://www.entrol.com",
+        "logo": "https://www.entrol.com/assets/logo.png"
+      },
+      {
+        "@type": "Blog",
+        "@id": "https://www.entrol.com/blog.html#webpage",
+        "url": "https://www.entrol.com/blog.html",
+        "name": "Entrol Blog | Pet Product Manufacturing Insights",
+        "description": "Expert insights on sourcing pet products from China, OEM/ODM manufacturing, and building your pet brand.",
+        "publisher": { "@id": "https://www.entrol.com/#organization" },
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.entrol.com/"},
+          {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.entrol.com/blog.html"}
+        ]
+      }
+    ]
   }
   </script>
 
