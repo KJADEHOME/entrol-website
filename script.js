@@ -119,6 +119,68 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
+// ── Inquiry Sidebar ─────────────────────────────────────
+function toggleInquiry() {
+  var sidebar = document.getElementById('inquirySidebar');
+  var overlay = document.getElementById('inquiryOverlay');
+  var tab = document.getElementById('inquiryTab');
+  if (!sidebar || !overlay || !tab) return;
+  var isOpen = sidebar.classList.contains('open');
+  if (isOpen) {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+    tab.classList.remove('hidden');
+  } else {
+    sidebar.classList.add('open');
+    overlay.classList.add('open');
+    tab.classList.add('hidden');
+  }
+}
+
+function openInquiryFor(product) {
+  var sidebar = document.getElementById('inquirySidebar');
+  var overlay = document.getElementById('inquiryOverlay');
+  var tab = document.getElementById('inquiryTab');
+  var select = document.getElementById('inqProduct');
+  if (!sidebar || !overlay || !tab) return;
+  if (select) select.value = product;
+  sidebar.classList.add('open');
+  overlay.classList.add('open');
+  tab.classList.add('hidden');
+}
+
+function submitInquiry(e) {
+  e.preventDefault();
+  var form = document.getElementById('inquiryForm');
+  var success = document.getElementById('inquirySuccess');
+  if (!form || !success) return;
+  // Track event
+  if (typeof gtag === 'function') {
+    gtag('event', 'inquiry_submit', { event_category: 'conversion', event_label: 'quick_inquiry' });
+  }
+  form.style.display = 'none';
+  success.style.display = 'block';
+  // Reset after delay
+  setTimeout(function() {
+    toggleInquiry();
+    setTimeout(function() {
+      form.style.display = '';
+      success.style.display = 'none';
+      form.reset();
+    }, 400);
+  }, 3000);
+}
+
+// Sync inquiry product dropdown from query params
+document.addEventListener('DOMContentLoaded', function() {
+  var params = new URLSearchParams(window.location.search);
+  var product = params.get('product');
+  if (product) {
+    var select = document.getElementById('inqProduct');
+    if (select) select.value = product;
+  }
+});
+
 // ── Parallax hero ───────────────────────────────────────
 const heroImg = document.querySelector('.hero-img');
 if (heroImg && heroImg.offsetParent !== null) {

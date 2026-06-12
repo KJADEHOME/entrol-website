@@ -645,3 +645,250 @@ em { font-style: italic; color: var(--color-primary); }
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 16px;
 }
+
+/* =====================================================
+   Floating Buttons (WhatsApp + LinkedIn)
+   ===================================================== */
+:root {
+  --wa-green: #25D366;
+  --li-blue: #0077B5;
+}
+
+.wa-float, .li-float {
+  position: fixed; right: 24px; z-index: 9998;
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  text-decoration: none;
+}
+.wa-float { background: var(--wa-green); bottom: 100px; }
+.li-float { background: var(--li-blue); bottom: 168px; }
+.wa-float:hover, .li-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.35);
+}
+.wa-float:active, .li-float:active { transform: scale(0.95); }
+
+/* tooltip via title attr handled natively */
+
+/* =====================================================
+   Inquiry Sidebar
+   ===================================================== */
+.inquiry-tab {
+  position: fixed; right: 0; top: 50%; z-index: 9997;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: right center;
+  background: var(--color-primary);
+  color: #fff; padding: 12px 20px;
+  font-family: var(--font-body); font-size: 0.85rem;
+  font-weight: 500; letter-spacing: 0.06em;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  transition: all 0.3s var(--ease);
+  white-space: nowrap;
+}
+.inquiry-tab:hover { background: var(--color-primary-dark); padding-right: 26px; }
+.inquiry-tab.hidden { opacity: 0; pointer-events: none; }
+
+.inquiry-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,0.4);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+.inquiry-overlay.open { opacity: 1; pointer-events: all; }
+
+.inquiry-sidebar {
+  position: fixed; top: 0; right: -380px; z-index: 10001;
+  width: 360px; max-width: 90vw; height: 100vh;
+  background: var(--color-white);
+  box-shadow: -8px 0 40px rgba(0,0,0,0.18);
+  padding: 40px 28px 28px;
+  overflow-y: auto;
+  transition: right 0.35s var(--ease-out);
+}
+.inquiry-sidebar.open { right: 0; }
+
+.inquiry-sidebar h3 {
+  font-family: var(--font-display); font-size: 1.4rem;
+  font-weight: 400; margin-bottom: 24px;
+  color: var(--color-text);
+}
+.inquiry-sidebar h3 em { font-style: italic; color: var(--color-primary); }
+
+.inquiry-close {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; font-size: 1.8rem;
+  cursor: pointer; color: var(--color-text-mid);
+  line-height: 1; padding: 4px;
+  transition: color 0.2s;
+}
+.inquiry-close:hover { color: var(--color-primary); }
+
+.inquiry-sidebar label {
+  display: block; font-size: 0.82rem; font-weight: 500;
+  color: var(--color-text-mid); margin-bottom: 4px;
+  margin-top: 14px; letter-spacing: 0.02em;
+}
+.inquiry-sidebar input,
+.inquiry-sidebar select,
+.inquiry-sidebar textarea {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 6px; font-size: 0.9rem;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: border-color 0.2s;
+  outline: none;
+}
+.inquiry-sidebar input:focus,
+.inquiry-sidebar select:focus,
+.inquiry-sidebar textarea:focus {
+  border-color: var(--color-primary);
+}
+.inquiry-sidebar textarea { resize: vertical; min-height: 80px; }
+
+.btn-inquiry-submit {
+  width: 100%; margin-top: 18px;
+  padding: 12px !important;
+  background: var(--color-primary) !important;
+  color: #fff !important; border: none !important;
+  font-size: 0.95rem !important; font-weight: 500 !important;
+  border-radius: 6px !important;
+  cursor: pointer;
+  transition: background 0.3s var(--ease);
+}
+.btn-inquiry-submit:hover { background: var(--color-primary-dark) !important; }
+
+.inquiry-success {
+  text-align: center; padding: 30px 0;
+}
+.inquiry-success svg { margin-bottom: 12px; }
+.inquiry-success h4 {
+  font-family: var(--font-display); font-size: 1.3rem;
+  color: var(--color-accent); margin-bottom: 6px;
+}
+.inquiry-success p { color: var(--color-text-mid); font-size: 0.9rem; }
+
+/* =====================================================
+   Hero CTA Enhancement
+   ===================================================== */
+.hero-cta-highlight {
+  padding: 15px 32px !important;
+  font-size: 0.95rem !important;
+  background: var(--color-primary) !important;
+  color: #fff !important;
+  border: none !important;
+  animation: ctaPulse 2s infinite;
+}
+@keyframes ctaPulse {
+  0% { box-shadow: 0 0 0 0 rgba(181,96,58,0.5); }
+  70% { box-shadow: 0 0 0 14px rgba(181,96,58,0); }
+  100% { box-shadow: 0 0 0 0 rgba(181,96,58,0); }
+}
+.hero-subtext {
+  display: block; margin-top: 10px;
+  font-size: 0.78rem; color: rgba(255,255,255,0.7);
+  letter-spacing: 0.03em;
+}
+
+/* =====================================================
+   Trust Badges
+   ===================================================== */
+.trust-bar {
+  background: var(--color-bg-alt);
+  padding: 20px 0;
+  border-top: 1px solid var(--color-border);
+}
+.trust-bar .container {
+  display: flex; flex-wrap: wrap;
+  justify-content: center; gap: 32px;
+}
+.trust-badge {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.85rem; color: var(--color-text-mid);
+  font-weight: 500;
+}
+.trust-badge svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+/* =====================================================
+   Product Inquiry Buttons (products.html)
+   ===================================================== */
+.btn-inquire {
+  display: inline-block; padding: 8px 18px;
+  background: var(--color-primary);
+  color: #fff; border-radius: var(--radius);
+  font-size: 0.82rem; font-weight: 500;
+  letter-spacing: 0.03em; cursor: pointer;
+  border: none; transition: background 0.3s var(--ease);
+}
+.btn-inquire:hover { background: var(--color-primary-dark); }
+
+/* =====================================================
+   Footer Newsletter
+   ===================================================== */
+.footer-newsletter {
+  margin-top: 16px;
+}
+.footer-newsletter h5 {
+  font-size: 0.82rem; font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.newsletter-form {
+  display: flex; gap: 8px; max-width: 280px;
+}
+.newsletter-form input {
+  flex: 1; padding: 8px 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 4px; background: rgba(255,255,255,0.08);
+  color: #fff; font-size: 0.85rem;
+  font-family: var(--font-body); outline: none;
+  transition: border-color 0.2s;
+}
+.newsletter-form input:focus { border-color: var(--color-primary); }
+.newsletter-form input::placeholder { color: rgba(255,255,255,0.3); }
+.newsletter-form button {
+  padding: 8px 16px; border: none; border-radius: 4px;
+  background: var(--color-primary); color: #fff;
+  font-size: 0.82rem; font-weight: 500; cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.3s var(--ease);
+  white-space: nowrap;
+}
+.newsletter-form button:hover { background: var(--color-primary-dark); }
+
+.footer-social {
+  display: flex; gap: 12px; margin-top: 12px;
+}
+.footer-social a {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  transition: background 0.3s var(--ease);
+}
+.footer-social a:hover { background: rgba(255,255,255,0.2); }
+.footer-social svg { width: 16px; height: 16px; }
+
+/* =====================================================
+   Mobile Responsive
+   ===================================================== */
+@media (max-width: 768px) {
+  .wa-float, .li-float {
+    width: 48px; height: 48px; right: 16px;
+  }
+  .wa-float { bottom: 88px; }
+  .li-float { bottom: 148px; }
+  .wa-float svg, .li-float svg {
+    width: 22px; height: 22px;
+  }
+  .inquiry-sidebar { width: 100vw; max-width: 100vw; right: -100vw; }
+  .trust-bar .container { gap: 16px; }
+  .trust-badge { font-size: 0.78rem; }
+  .newsletter-form { flex-direction: column; max-width: 100%; }
+  .hero-cta-highlight { padding: 12px 24px !important; font-size: 0.88rem !important; }
+}
