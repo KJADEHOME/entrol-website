@@ -465,6 +465,37 @@
     </div>
   </section>
 
+  <!-- CATALOG DOWNLOAD -->
+  <section class="catalog-section">
+    <div class="catalog-inner reveal">
+      <div class="catalog-left">
+        <div class="catalog-icon-big">&#x1f4d6;</div>
+        <h2 class="catalog-title">Get the Full Product Catalog</h2>
+        <p class="catalog-desc">71+ SKUs &bull; Pricing Tiers &bull; MOQ Details &bull; Material Specs &bull; Photo Gallery</p>
+        <ul class="catalog-perks">
+          <li>&#x2705; Instant email delivery</li>
+          <li>&#x2705; No commitment &mdash; 100% free</li>
+          <li>&#x2705; Includes OEM &amp; wholesale pricing guides</li>
+        </ul>
+      </div>
+      <div class="catalog-right">
+        <form action="https://formsubmit.co/b.wu@entrol.com" method="POST" class="catalog-form">
+          <input type="hidden" name="_subject" value="[Entrol] Catalog Download Request - Homepage">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_next" value="https://www.entrol.com/?catalog=sent">
+          <input type="hidden" name="catalog_request" value="Yes - Send full product catalog PDF">
+          <label class="catalog-label" for="catalog-email">Your Email Address</label>
+          <div class="catalog-input-row">
+            <input type="email" name="email" id="catalog-email" class="catalog-email-input" placeholder="business@yourcompany.com" required>
+            <button type="submit" class="catalog-submit-btn">Send Me the Catalog &rarr;</button>
+          </div>
+          <p class="catalog-privacy">&#x1f512; Your email is safe. No spam &mdash; catalog only.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- STATS BAR -->
   <section class="stats-bar">
     <div class="stats-bar-inner">
@@ -855,11 +886,11 @@
   </section>
 
   <!-- RFQ FORM -->
-  <section class="rfq-section section">
+  <section class="rfq-section section" id="rfq-form-anchor">
     <div class="container">
       <div class="rfq-box reveal">
-        <h2 class="rfq-title">Get Free Quote for Your Pet Products</h2>
-        <p class="rfq-subtitle">Fill in your requirements below. We&apos;ll reply with a tailored quote within 24 hours.</p>
+        <h2 class="rfq-title">Ready to Start? Get Your Free Quote</h2>
+        <p class="rfq-subtitle">Or prefer to talk? <a href="https://wa.me/8615263130999" style="color:#25D366;text-decoration:underline;">Chat with us on WhatsApp</a> &mdash; we respond within minutes.</p><p style="margin-top:8px;color:rgba(255,255,255,0.55);font-size:0.85rem;">Fill in your requirements below and we&apos;ll send a tailored quote within 24 hours.</p>
         <form action="https://formsubmit.co/b.wu@entrol.com" method="POST" class="rfq-form">
           <input type="hidden" name="_subject" value="[Entrol] New RFQ from Homepage">
           <input type="hidden" name="_captcha" value="false">
@@ -886,6 +917,21 @@
       </div>
     </div>
   </section>
+
+  <!-- STICKY INQUIRY BAR (mobile) -->
+  <div class="sticky-inquiry-bar">
+    <a href="https://wa.me/8615263130999?text=Hi%20Entrol%2C%20I%27d%20like%20to%20get%20your%20product%20catalog%20and%20pricing."
+       class="sticky-btn sticky-wa" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.34 4.94L2.04 22l5.25-1.38c1.47.77 3.13 1.18 4.75 1.18 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm4.52 6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.44.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.49-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.09s.9 2.42 1.03 2.59c.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.12-.23-.19-.48-.31z"/></svg>
+      <span>WhatsApp</span>
+    </a>
+    <button class="sticky-btn sticky-catalog" onclick="document.getElementById('catalog-email').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('catalog-email').focus()},500);">
+      &#x1f4d6; <span>Catalog</span>
+    </button>
+    <a href="#rfq-form-anchor" class="sticky-btn sticky-rfq">
+      &#x1f4dd; <span>Get Quote</span>
+    </a>
+  </div>
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -921,7 +967,8 @@
 
   <script src="script.js"></script>
 <!-- WhatsApp Floating Button -->
-<a href="https://wa.me/8615263130999" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+<a href="https://wa.me/8615263130999?text=Hi%20Entrol%2C%20I%20saw%20your%20website%20and%20I%27d%20like%20to%20get%20your%20product%20catalog%20and%20pricing."
+   class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
   <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
     <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.34 4.94L2.04 22l5.25-1.38c1.47.77 3.13 1.18 4.75 1.18 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.18c-1.49 0-2.95-.4-4.22-1.15l-.3-.18-3.12.82.83-3.04-.2-.31c-.79-1.32-1.21-2.85-1.21-4.41 0-4.55 3.7-8.25 8.25-8.25s8.25 3.7 8.25 8.25-3.7 8.25-8.25 8.25zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.44.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.49-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.09s.9 2.42 1.03 2.59c.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.12-.23-.19-.48-.31z"/>
   </svg>
@@ -929,6 +976,20 @@
 </a>
 
 <style>
+/* ============================================
+   INQUIRY SYSTEM — WhatsApp Floating Button
+   ============================================ */
+@keyframes wa-pulse {
+  0%, 100% { box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3); }
+  50% { box-shadow: 0 4px 32px rgba(37, 211, 102, 0.6); }
+}
+@keyframes wa-bounce {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.12); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.08); }
+  60% { transform: scale(1); }
+}
 .whatsapp-float {
   position: fixed;
   bottom: 24px;
@@ -946,7 +1007,7 @@
   transition: all 0.3s ease;
 }
 
-.whatsapp-float:hover {
+.whatsapp-float:hover, .whatsapp-float:focus-visible {
   transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
 }
@@ -1347,6 +1408,132 @@
 }
 
 /* ============ SCREEN 7: RFQ Form ============ */
+/* ============================================
+   INQUIRY SYSTEM — Catalog Download Section
+   ============================================ */
+.catalog-section {
+  background: linear-gradient(180deg, #1A1714 0%, #1E1B17 100%);
+  padding: 60px 0;
+}
+.catalog-inner {
+  max-width: var(--container-max, 1200px);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 60px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.catalog-icon-big {
+  font-size: 3.2rem;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+.catalog-title {
+  font-family: var(--font-display, serif);
+  font-size: 1.9rem;
+  font-weight: 500;
+  color: #f5f0e8;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+.catalog-desc {
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+}
+.catalog-perks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.catalog-perks li {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.88rem;
+  padding: 4px 0;
+  line-height: 1.5;
+}
+.catalog-form {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 32px 28px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.catalog-label {
+  display: block;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+.catalog-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.catalog-email-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.catalog-email-input:focus {
+  border-color: #25D366;
+}
+.catalog-email-input::placeholder {
+  color: rgba(255,255,255,0.35);
+}
+.catalog-submit-btn {
+  padding: 12px 24px;
+  background: #25D366;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+.catalog-submit-btn:hover {
+  background: #1da851;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+}
+.catalog-privacy {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.75rem;
+  margin: 0;
+}
+@media (max-width: 768px) {
+  .catalog-inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .catalog-title {
+    font-size: 1.5rem;
+  }
+  .catalog-input-row {
+    flex-direction: column;
+  }
+  .catalog-submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================
+   INQUIRY SYSTEM — RFQ Form (existing, enhanced)
+   ============================================ */
 .rfq-section {
   padding: 80px 0;
   background: #fff;
@@ -1441,6 +1628,73 @@
   }
   .rfq-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   INQUIRY SYSTEM — Sticky Mobile Bar
+   ============================================ */
+.sticky-inquiry-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(26, 23, 20, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 8px 12px;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.sticky-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #fff;
+  font-family: inherit;
+  white-space: nowrap;
+  max-width: 180px;
+}
+.sticky-wa {
+  background: #25D366;
+}
+.sticky-wa:hover {
+  background: #1da851;
+}
+.sticky-catalog {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.sticky-catalog:hover {
+  background: rgba(255,255,255,0.18);
+}
+.sticky-rfq {
+  background: #D4A84B;
+}
+.sticky-rfq:hover {
+  background: #C49A3E;
+}
+@media (min-width: 769px) {
+  .sticky-inquiry-bar {
+    display: none !important;
+  }
+}
+@media (max-width: 768px) {
+  .whatsapp-float {
+    bottom: 80px !important;
   }
 }
 </style>
