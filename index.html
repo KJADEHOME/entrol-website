@@ -107,9 +107,45 @@
         "@type": "OfferCatalog",
         "name": "Pet Products",
         "itemListElement": [
-          {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Cat Trees"}},
-          {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Pet Apparel"}},
-          {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Pet Bedding"}}
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "@id": "https://www.entrol.com/#cat-trees",
+              "name": "Cat Trees",
+              "description": "OEM cat trees manufacturer. Multi-level climbing frames, condos, scratching posts with sisal rope, plush fabric, and solid wood. 71+ SKUs. Low MOQ from 200 units.",
+              "url": "https://www.entrol.com/cat-tree.html",
+              "image": "https://www.entrol.com/assets/images/hero-product-111.webp",
+              "category": "Pet Supplies > Cat Furniture",
+              "manufacturer": {"@id": "https://www.entrol.com/#organization"}
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "@id": "https://www.entrol.com/#pet-apparel",
+              "name": "Pet Apparel",
+              "description": "Wholesale pet apparel & knitwear. Sweaters, jackets, seasonal collections in cotton, wool & acrylic blends. OEM & private label available.",
+              "url": "https://www.entrol.com/pet-apparel.html",
+              "image": "https://www.entrol.com/assets/images/hero-product-11.webp",
+              "category": "Pet Supplies > Pet Clothing & Accessories",
+              "manufacturer": {"@id": "https://www.entrol.com/#organization"}
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Product",
+              "@id": "https://www.entrol.com/#pet-bedding",
+              "name": "Pet Bedding",
+              "description": "Pet bedding manufacturer China. Beds, pads, cushions & sleepwear. Orthopedic, cooling & standard fills in S/M/L/XL sizes. Bulk wholesale available.",
+              "url": "https://www.entrol.com/pet-bedding.html",
+              "image": "https://www.entrol.com/assets/images/hero-product-1.webp",
+              "category": "Pet Supplies > Pet Beds & Furniture",
+              "manufacturer": {"@id": "https://www.entrol.com/#organization"}
+            }
+          }
         ]
       }
     },
@@ -280,7 +316,7 @@
     <div class="container">
       <div class="section-header reveal">
         <p class="section-eyebrow">Our Factory</p>
-        <h2 class="section-title">Trusted Pet Products Factory Since 2005</h2>
+        <h2 class="section-title">Trusted OEM Pet Products Manufacturer &amp; Factory in China Since 2005</h2>
       </div>
       <div class="trust-grid">
         <div class="trust-card reveal">
@@ -305,8 +341,9 @@
         </div>
       </div>
       <div class="trust-badges reveal">
-        <span class="trust-badge">Exported to 30+ countries</span>
-        <span class="trust-badge">Serving Amazon sellers & wholesalers</span>
+        <span class="trust-badge">Exported to 50+ countries</span>
+        <span class="trust-badge">Serving Amazon sellers & wholesalers worldwide</span>
+        <span class="trust-badge"><a href="products.html" style="color:inherit;text-decoration:underline;">Wholesale pet supplier</a> with 20+ years experience</span>
       </div>
     </div>
   </section>
@@ -331,7 +368,9 @@
           <ul class="solution-list">
             <li>FBA-ready packaging</li>
             <li>Private label support</li>
+            <li>Low MOQ starting from 200 units</li>
           </ul>
+          <a href="contact.html" class="solution-cta">Ask for OEM Quote &rarr;</a>
         </div>
         <div class="solution-card reveal">
           <div class="solution-icon">
@@ -343,9 +382,11 @@
           </div>
           <h3 class="solution-title">Wholesalers</h3>
           <ul class="solution-list">
-            <li>Bulk supply</li>
-            <li>Stable pricing</li>
+            <li>Bulk supply from China factory</li>
+            <li>Stable factory-direct pricing</li>
+            <li>Mixed container shipping</li>
           </ul>
+          <a href="products.html" class="solution-cta">View Product Catalog &rarr;</a>
         </div>
         <div class="solution-card reveal">
           <div class="solution-icon">
@@ -359,9 +400,11 @@
           </div>
           <h3 class="solution-title">Brand Owners</h3>
           <ul class="solution-list">
-            <li>Custom design</li>
-            <li>OEM / ODM production</li>
+            <li>Custom product design from concept</li>
+            <li>Full OEM / ODM production</li>
+            <li>Private labeling & custom packaging</li>
           </ul>
+          <a href="about.html" class="solution-cta">Learn About Our OEM &rarr;</a>
         </div>
       </div>
     </div>
@@ -405,6 +448,9 @@
             <span class="cat-card-link">Explore â?/span>
           </div>
         </a>
+      </div>
+      <div class="text-center reveal" style="margin-top:32px">
+        <a href="products.html" class="btn btn-outline">View All Product Categories &rarr;</a>
       </div>
     </div>
   </section>
@@ -479,6 +525,10 @@
           <p>Multi-stage inspection: raw material check → inline QC → final AQL audit before every shipment.</p>
         </div>
       </div>
+    </div>
+    <div class="text-center reveal" style="margin-top:32px">
+      <p style="color:var(--color-text-mid);margin-bottom:12px;font-size:0.95rem;">As a leading <strong>OEM pet products manufacturer</strong> and <strong>wholesale pet supplier</strong>, we&rsquo;re ready to bring your product vision to life.</p>
+      <a href="contact.html" class="btn btn-primary">Talk to Our OEM Team &rarr;</a>
     </div>
   </section><!-- FAQ -->
   <section class="faq section" id="faq">
@@ -761,6 +811,46 @@
   .whatsapp-tooltip {
     display: none;
   }
+}
+
+
+/* Solution card CTAs */
+.solution-card {
+  position: relative;
+  padding-bottom: 56px;
+}
+.solution-cta {
+  position: absolute;
+  bottom: 16px;
+  left: 24px;
+  right: 24px;
+  display: inline-block;
+  color: #D4A84B;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+.solution-cta:hover {
+  border-bottom-color: #D4A84B;
+}
+.btn-outline {
+  display: inline-block;
+  padding: 12px 32px;
+  border: 2px solid var(--color-primary, #D4A84B);
+  border-radius: 8px;
+  color: var(--color-primary, #D4A84B);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+.btn-outline:hover {
+  background: var(--color-primary, #D4A84B);
+  color: #fff;
+}
+.text-center {
+  text-align: center;
 }
 
 /* Trust Section (Second Screen) */
