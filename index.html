@@ -311,6 +311,62 @@
     </div>
   </section>
 
+  <!-- SOLUTIONS SECTION -->
+  <section class="solutions-section section">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-eyebrow">Our Services</p>
+        <h2 class="section-title">OEM &amp; Wholesale Solutions<br><em>for Global Buyers</em></h2>
+      </div>
+      <div class="solutions-grid">
+        <div class="solution-card reveal">
+          <div class="solution-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="12" fill="#E8F4E8"/>
+              <path d="M32 18V30C32 31.1 31.1 32 30 32H18C16.9 32 16 31.1 16 30V18C16 16.9 16.9 16 18 16H30C31.1 16 32 16.9 32 18Z" stroke="#25D366" stroke-width="2"/>
+              <path d="M16 20L24 26L32 20" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="solution-title">Amazon Sellers</h3>
+          <ul class="solution-list">
+            <li>FBA-ready packaging</li>
+            <li>Private label support</li>
+          </ul>
+        </div>
+        <div class="solution-card reveal">
+          <div class="solution-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="12" fill="#EDF0F8"/>
+              <path d="M16 32V20C16 18.9 16.9 18 18 18H24L26 20H30C31.1 20 32 20.9 32 22V32C32 33.1 31.1 34 30 34H18C16.9 34 16 33.1 16 32Z" stroke="#4A6FA5" stroke-width="2"/>
+              <path d="M16 26H32" stroke="#4A6FA5" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3 class="solution-title">Wholesalers</h3>
+          <ul class="solution-list">
+            <li>Bulk supply</li>
+            <li>Stable pricing</li>
+          </ul>
+        </div>
+        <div class="solution-card reveal">
+          <div class="solution-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="12" fill="#FAF0E6"/>
+              <circle cx="24" cy="18" r="5" stroke="#D4A84B" stroke-width="2"/>
+              <path d="M15 34C15 29.6 19 26 24 26C29 26 33 29.6 33 34" stroke="#D4A84B" stroke-width="2" stroke-linecap="round"/>
+              <path d="M20 22C18.3 22 17 20.7 17 19" stroke="#D4A84B" stroke-width="2" stroke-linecap="round"/>
+              <path d="M28 22C29.7 22 31 20.7 31 19" stroke="#D4A84B" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="solution-title">Brand Owners</h3>
+          <ul class="solution-list">
+            <li>Custom design</li>
+            <li>OEM / ODM production</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CATEGORIES -->
   <section class="categories section">
     <div class="container">
@@ -713,6 +769,88 @@
 @media (max-width: 480px) {
   .trust-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Solutions Section (Third Screen) */
+.solutions-section {
+  padding: 80px 0;
+  background: #fff;
+}
+.solutions-section .section-title {
+  text-align: center;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  margin-bottom: 48px;
+}
+.solutions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1050px;
+  margin: 0 auto;
+}
+.solution-card {
+  background: #fff;
+  border: 1px solid #E2DAD4;
+  border-radius: 16px;
+  padding: 36px 28px;
+  text-align: center;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.solution-card:hover {
+  border-color: #C4B8A7;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+.solution-icon {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+.solution-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2A3D45;
+  margin: 0 0 16px 0;
+}
+.solution-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.solution-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 0.95rem;
+  color: #5A6B72;
+  line-height: 1.6;
+  text-align: left;
+}
+.solution-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #25D366;
+}
+.solution-card:nth-child(2) .solution-list li::before {
+  background: #4A6FA5;
+}
+.solution-card:nth-child(3) .solution-list li::before {
+  background: #D4A84B;
+}
+@media (max-width: 768px) {
+  .solutions-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .solution-card {
+    padding: 28px 24px;
   }
 }
 </style>
