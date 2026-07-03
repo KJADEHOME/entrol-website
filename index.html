@@ -241,10 +241,41 @@
         <a href="contact.html" class="btn btn-primary">Get Free Quote</a>
         <a href="https://wa.me/8615263130999?text=Hi%20Entrol%2C%20I%27m%20interested%20in%20OEM%20pet%20products.%20Can%20you%20send%20me%20your%20catalog%3F" target="_blank" rel="noopener" class="btn btn-whatsapp-hero">WhatsApp Us</a>
       </div>
-      <div class="hero-money-pages reveal" style="margin-top:20px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
-        <a href="oem-pet-products-manufacturer.html" class="hero-money-link" style="color:#D4A84B;text-decoration:none;font-weight:500;font-size:0.9rem;border-bottom:1px solid rgba(212,168,75,0.4);padding-bottom:2px;transition:all 0.3s;" onmouseover="this.style.borderBottomColor='#D4A84B'" onmouseout="this.style.borderBottomColor='rgba(212,168,75,0.4)'">&#x1f3ed; OEM Pet Products Manufacturer &rarr;</a>
-        <a href="wholesale-pet-products.html" class="hero-money-link" style="color:#1B3A2D;text-decoration:none;font-weight:500;font-size:0.9rem;border-bottom:1px solid rgba(27,58,45,0.4);padding-bottom:2px;transition:all 0.3s;" onmouseover="this.style.borderBottomColor='#1B3A2D'" onmouseout="this.style.borderBottomColor='rgba(27,58,45,0.4)'">&#x1f4e6; Wholesale Pet Products Supplier &rarr;</a>
-        <a href="amazon-pet-supplier.html" class="hero-money-link" style="color:#FF9900;text-decoration:none;font-weight:500;font-size:0.9rem;border-bottom:1px solid rgba(255,153,0,0.4);padding-bottom:2px;transition:all 0.3s;" onmouseover="this.style.borderBottomColor='#FF9900'" onmouseout="this.style.borderBottomColor='rgba(255,153,0,0.4)'">&#x1f4e6; Amazon FBA Pet Supplier &rarr;</a>
+      <!-- ===== THREE ENTRY GATEWAY ===== -->
+      <div class="hero-gateway reveal">
+        <!-- Card 1: OEM Manufacturer -->
+        <a href="oem-pet-products-manufacturer.html" class="gateway-card gateway-oem">
+          <div class="gateway-icon">&#x1f3ed;</div>
+          <h2 class="gateway-title">OEM Manufacturer</h2>
+          <ul class="gateway-features">
+            <li>Custom design &amp; private label</li>
+            <li>Low MOQ from 200 units</li>
+            <li>Fast 7-10 day sampling</li>
+          </ul>
+          <span class="gateway-cta">Explore OEM Services &rarr;</span>
+        </a>
+        <!-- Card 2: Amazon FBA Supplier -->
+        <a href="amazon-pet-supplier.html" class="gateway-card gateway-amazon">
+          <div class="gateway-icon">&#x1f4e6;</div>
+          <h2 class="gateway-title">Amazon Supplier</h2>
+          <ul class="gateway-features">
+            <li>FBA-ready packaging &amp; labels</li>
+            <li>Amazon compliance (CPSIA, ASTM)</li>
+            <li>Direct FBA warehouse shipping</li>
+          </ul>
+          <span class="gateway-cta">Scale Your Amazon Business &rarr;</span>
+        </a>
+        <!-- Card 3: Wholesale Supplier -->
+        <a href="wholesale-pet-products.html" class="gateway-card gateway-wholesale">
+          <div class="gateway-icon">&#x1f4ca;</div>
+          <h2 class="gateway-title">Wholesale Supplier</h2>
+          <ul class="gateway-features">
+            <li>Factory-direct wholesale pricing</li>
+            <li>Mixed container shipping</li>
+            <li>71+ ready-to-ship SKUs</li>
+          </ul>
+          <span class="gateway-cta">Buy Wholesale &rarr;</span>
+        </a>
       </div>
       <style>
       .btn-whatsapp-hero {
@@ -257,6 +288,140 @@
         border-color: #1da851;
         color: white;
       }
+
+      /* ===== THREE ENTRY GATEWAY ===== */
+      .hero-gateway {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin: 36px 0 28px 0;
+        max-width: 960px;
+        width: 100%;
+      }
+      .gateway-card {
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 28px 22px 24px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.35s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .gateway-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        border-radius: 16px 16px 0 0;
+        transition: height 0.3s ease;
+      }
+      .gateway-oem::before {
+        background: linear-gradient(90deg, #D4A84B, #C49A3E);
+      }
+      .gateway-amazon::before {
+        background: linear-gradient(90deg, #FF9900, #E88B00);
+      }
+      .gateway-wholesale::before {
+        background: linear-gradient(90deg, #27AE60, #1E8449);
+      }
+      .gateway-card:hover {
+        background: rgba(255, 255, 255, 0.13);
+        border-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      }
+      .gateway-card:hover::before {
+        height: 6px;
+      }
+      .gateway-icon {
+        font-size: 2.4rem;
+        margin-bottom: 12px;
+        line-height: 1;
+      }
+      .gateway-title {
+        font-family: var(--font-display, serif);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #fff;
+        margin: 0 0 14px 0;
+        letter-spacing: 0.01em;
+      }
+      .gateway-features {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 18px 0;
+        text-align: left;
+        width: 100%;
+      }
+      .gateway-features li {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.85rem;
+        padding: 3px 0 3px 20px;
+        position: relative;
+        line-height: 1.5;
+      }
+      .gateway-features li::before {
+        content: '\2713';
+        position: absolute;
+        left: 0;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+      }
+      .gateway-cta {
+        display: inline-block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 8px 20px;
+        border-radius: 20px;
+        margin-top: auto;
+        transition: all 0.3s ease;
+      }
+      .gateway-oem .gateway-cta {
+        color: #D4A84B;
+        border: 1px solid rgba(212, 168, 75, 0.5);
+      }
+      .gateway-oem:hover .gateway-cta {
+        background: rgba(212, 168, 75, 0.15);
+        border-color: #D4A84B;
+      }
+      .gateway-amazon .gateway-cta {
+        color: #FF9900;
+        border: 1px solid rgba(255, 153, 0, 0.5);
+      }
+      .gateway-amazon:hover .gateway-cta {
+        background: rgba(255, 153, 0, 0.15);
+        border-color: #FF9900;
+      }
+      .gateway-wholesale .gateway-cta {
+        color: #27AE60;
+        border: 1px solid rgba(39, 174, 96, 0.5);
+      }
+      .gateway-wholesale:hover .gateway-cta {
+        background: rgba(39, 174, 96, 0.15);
+        border-color: #27AE60;
+      }
+      @media (max-width: 768px) {
+        .hero-gateway {
+          grid-template-columns: 1fr;
+          gap: 14px;
+          max-width: 400px;
+          margin: 28px auto 20px;
+        }
+        .gateway-card {
+          padding: 22px 18px 20px;
+        }
+        .gateway-title {
+          font-size: 1.1rem;
+        }
+      }
+
       .hero-usps {
         list-style: none;
         padding: 0;
