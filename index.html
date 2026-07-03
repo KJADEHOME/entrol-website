@@ -275,6 +275,42 @@
     </div>
   </section>
 
+  <!-- TRUST SECTION -->
+  <section class="trust-section section">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-eyebrow">Our Factory</p>
+        <h2 class="section-title">Trusted Pet Products Factory Since 2005</h2>
+      </div>
+      <div class="trust-grid">
+        <div class="trust-card reveal">
+          <div class="trust-icon">🏭</div>
+          <div class="trust-data">100,000+ sq ft</div>
+          <div class="trust-label">Factory Area</div>
+        </div>
+        <div class="trust-card reveal">
+          <div class="trust-icon">👷</div>
+          <div class="trust-data">300+ Workers</div>
+          <div class="trust-label">Employees</div>
+        </div>
+        <div class="trust-card reveal">
+          <div class="trust-icon">📦</div>
+          <div class="trust-data">3M+ Pieces/Year</div>
+          <div class="trust-label">Annual Production</div>
+        </div>
+        <div class="trust-card reveal">
+          <div class="trust-icon">🌍</div>
+          <div class="trust-data">50+ Countries</div>
+          <div class="trust-label">Export Markets</div>
+        </div>
+      </div>
+      <div class="trust-badges reveal">
+        <span class="trust-badge">Exported to 30+ countries</span>
+        <span class="trust-badge">Serving Amazon sellers & wholesalers</span>
+      </div>
+    </div>
+  </section>
+
   <!-- CATEGORIES -->
   <section class="categories section">
     <div class="container">
@@ -596,6 +632,87 @@
   
   .whatsapp-tooltip {
     display: none;
+  }
+}
+
+/* Trust Section (Second Screen) */
+.trust-section {
+  padding: 80px 0;
+  background: var(--color-bg, #F7F5F2);
+}
+.trust-section .section-title {
+  text-align: center;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  margin-bottom: 48px;
+}
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.trust-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.trust-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.trust-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+.trust-data {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2A3D45;
+  margin-bottom: 4px;
+}
+.trust-label {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+.trust-badges {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: #fff;
+  border: 1px solid #E2DAD4;
+  border-radius: 100px;
+  font-size: 0.9rem;
+  color: #5A6B72;
+  font-weight: 500;
+}
+@media (max-width: 768px) {
+  .trust-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .trust-card {
+    padding: 24px 16px;
+  }
+  .trust-data {
+    font-size: 1.2rem;
+  }
+}
+@media (max-width: 480px) {
+  .trust-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
