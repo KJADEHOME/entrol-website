@@ -1,0 +1,556 @@
+{
+  "_meta": {
+    "project": "Entrol B2B Pet Products Blog",
+    "frequency": "2 articles/month (1st and 15th)",
+    "total_articles": 24,
+    "period": "July 2026 – June 2027",
+    "content_pillars": [
+      "Product-Specific (Cat Trees, Dog Toys, Pet Apparel, Pet Bedding)",
+      "Amazon FBA & Private Label",
+      "Manufacturing & OEM/ODM",
+      "EU Market & Compliance",
+      "Logistics & Supply Chain",
+      "Seasonal & Trends",
+      "Business Strategy & Growth",
+      "Trade Shows & Industry Events"
+    ],
+    "article_template": {
+      "structure": [
+        "GTM + hreflang",
+        "Article JSON-LD Schema",
+        "Hero section",
+        "Info box",
+        "Main content (8-12 sections)",
+        "Red flags / warnings",
+        "CTA box",
+        "Related articles cross-links",
+        "WhatsApp float",
+        "Navigation + Footer"
+      ],
+      "word_count": "1,500-2,200 words",
+      "reading_time": "7-9 minutes",
+      "internal_links": "Link to 2-3 money pages (oem-pet-products-manufacturer, wholesale-pet-products, amazon-pet-supplier, and new landing pages)",
+      "encoding": "UTF-8"
+    }
+  },
+  "calendar": [
+    {
+      "month": "2026-07",
+      "articles": [
+        {
+          "id": "BLOG-015",
+          "title": "Cat Tree Design Trends 2026: What Buyers Are Looking For",
+          "slug": "cat-tree-design-trends-2026",
+          "target_keyword": "cat tree design trends 2026",
+          "pillar": "Product-Specific",
+          "money_page_link": "cat-tree-manufacturer",
+          "status": "completed",
+          "outline": [
+            "Why cat tree design matters for B2B buyers",
+            "Top 5 design trends shaping 2026",
+            "Materials that are trending: sisal, plush, wood",
+            "Multi-function cat trees: combining play + rest",
+            "Color and aesthetic trends for US/EU markets",
+            "Space-saving designs for apartments",
+            "How to communicate design requirements to your factory",
+            "MOQ considerations for custom designs"
+          ],
+          "completed_date": "2026-07-07"
+        },
+        {
+          "id": "BLOG-016",
+          "title": "Pet Product Safety Standards: US vs EU Compliance Guide",
+          "slug": "pet-product-safety-standards-us-eu",
+          "target_keyword": "pet product safety standards compliance",
+          "pillar": "EU Market & Compliance",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "completed",
+          "outline": [
+            "Why safety compliance is non-negotiable for B2B buyers",
+            "US standards: ASTM, CPSIA, FDA (if applicable)",
+            "EU standards: CE Marking, REACH, OEKO-TEX",
+            "Key differences between US and EU requirements",
+            "How to verify your supplier's compliance",
+            "Common compliance failures and how to avoid them",
+            "Documentation you need before importing",
+            "Entrol's compliance certifications"
+          ],
+          "completed_date": "2026-07-07"
+        }
+      ]
+    },
+    {
+      "month": "2026-08",
+      "articles": [
+        {
+          "id": "BLOG-017",
+          "title": "How to Source Dog Toys from China: Complete B2B Guide",
+          "slug": "source-dog-toys-from-china-guide",
+          "target_keyword": "source dog toys from China",
+          "pillar": "Product-Specific",
+          "money_page_link": "dog-toys-oem",
+          "status": "pending",
+          "outline": [
+            "Why China dominates dog toy manufacturing",
+            "Types of dog toys: plush, rubber, rope, interactive",
+            "Key manufacturing regions for dog toys",
+            "Material options: natural rubber, TPR, cotton rope",
+            "Safety testing requirements for dog toys",
+            "MOQ and pricing ranges by toy type",
+            "Custom packaging and branding options",
+            "How to evaluate dog toy factory samples"
+          ]
+        },
+        {
+          "id": "BLOG-018",
+          "title": "Amazon PPC Strategy for Pet Product Brands",
+          "slug": "amazon-ppc-pet-product-brands",
+          "target_keyword": "Amazon PPC pet products strategy",
+          "pillar": "Amazon FBA & Private Label",
+          "money_page_link": "amazon-pet-supplier",
+          "status": "pending",
+          "outline": [
+            "Why PPC is essential for pet brands on Amazon",
+            "Keyword research for pet product campaigns",
+            "Sponsored Products vs Sponsored Brands vs Sponsored Display",
+            "Budget planning: how much to spend per product",
+            "ACoS targets for pet product categories",
+            "Negative keyword strategy to reduce waste",
+            "Seasonal PPC adjustments for pet products",
+            "How to scale winning campaigns"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2026-09",
+      "articles": [
+        {
+          "id": "BLOG-019",
+          "title": "Pet Apparel Manufacturing Guide: From Design to Delivery",
+          "slug": "pet-apparel-manufacturing-guide",
+          "target_keyword": "pet apparel manufacturing guide",
+          "pillar": "Product-Specific",
+          "money_page_link": "pet-apparel-wholesale",
+          "status": "pending",
+          "outline": [
+            "Pet apparel market size and growth trends",
+            "Fabric selection: cotton, polyester, fleece, waterproof",
+            "Sizing standards for US and EU markets",
+            "Custom design process: from sketch to sample",
+            "Embroidery, printing, and branding options",
+            "MOQ and pricing by garment type",
+            "Seasonal planning: winter coats vs summer tees",
+            "Quality control checklist for apparel"
+          ]
+        },
+        {
+          "id": "BLOG-020",
+          "title": "China vs Vietnam vs India: Where to Manufacture Pet Products",
+          "slug": "china-vietnam-india-pet-manufacturing",
+          "target_keyword": "where to manufacture pet products",
+          "pillar": "Manufacturing & OEM/ODM",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Overview of the three major manufacturing hubs",
+            "Cost comparison: labor, materials, logistics",
+            "Quality comparison by product category",
+            "MOQ and lead time differences",
+            "Infrastructure and supply chain maturity",
+            "Trade tariffs and import duties comparison",
+            "Communication and language barriers",
+            "Why China remains the top choice for pet products"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2026-10",
+      "articles": [
+        {
+          "id": "BLOG-021",
+          "title": "Holiday Season Stock Planning for Pet Product Retailers",
+          "slug": "holiday-stock-planning-pet-retailers",
+          "target_keyword": "holiday season pet product stock planning",
+          "pillar": "Seasonal & Trends",
+          "money_page_link": "wholesale-pet-products",
+          "status": "pending",
+          "outline": [
+            "Why holiday planning starts in October",
+            "Peak selling seasons: Black Friday, Christmas, CNY",
+            "Lead time calculations for ocean vs air freight",
+            "How much inventory to order: formulas and benchmarks",
+            "Seasonal product mix: gift items, winter gear, toys",
+            "Custom holiday packaging and gift sets",
+            "Managing cash flow during peak season",
+            "Post-holiday inventory management"
+          ]
+        },
+        {
+          "id": "BLOG-022",
+          "title": "Pet Bedding OEM Guide: Memory Foam, Plush, and Orthopedic",
+          "slug": "pet-bedding-oem-guide",
+          "target_keyword": "pet bedding OEM manufacturer",
+          "pillar": "Product-Specific",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Pet bedding market overview by segment",
+            "Material deep dive: memory foam, orthopedic foam, plush",
+            "Cover fabric options: microfiber, cotton, waterproof",
+            "Custom sizes and shapes for different breeds",
+            "Washable vs non-washable: what buyers want",
+            "Eco-friendly bedding materials",
+            "MOQ and pricing by material grade",
+            "Packaging and compression for cost-effective shipping"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2026-11",
+      "articles": [
+        {
+          "id": "BLOG-023",
+          "title": "Canton Fair Guide for Pet Product Buyers: How to Prepare",
+          "slug": "canton-fair-pet-product-buyers-guide",
+          "target_keyword": "Canton Fair pet products guide",
+          "pillar": "Trade Shows & Industry Events",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "What is Canton Fair and why it matters for pet buyers",
+            "Phase and hall guide for pet products",
+            "Pre-fair preparation: goals, questions, samples",
+            "How to evaluate suppliers at the fair",
+            "Negotiation tactics for better MOQ and pricing",
+            "Post-fair follow-up strategy",
+            "Factory visit scheduling during your trip",
+            "Alternatives if you can't attend in person"
+          ]
+        },
+        {
+          "id": "BLOG-024",
+          "title": "How to Build a Pet Product Brand from Scratch in 2026",
+          "slug": "build-pet-product-brand-from-scratch",
+          "target_keyword": "build pet product brand",
+          "pillar": "Business Strategy & Growth",
+          "money_page_link": "private-label-pet-supplier",
+          "status": "pending",
+          "outline": [
+            "Step 1: Find your niche in the pet market",
+            "Step 2: Validate demand with Amazon and Google data",
+            "Step 3: Choose between private label and custom OEM",
+            "Step 4: Find the right manufacturer",
+            "Step 5: Develop your product and packaging",
+            "Step 6: Build your brand identity and story",
+            "Step 7: Launch strategy for Amazon and DTC",
+            "Step 8: Scale and expand your product line"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2026-12",
+      "articles": [
+        {
+          "id": "BLOG-025",
+          "title": "Pet Product Industry Year in Review: 2026 Key Takeaways",
+          "slug": "pet-product-industry-2026-review",
+          "target_keyword": "pet product industry 2026 review",
+          "pillar": "Seasonal & Trends",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Market size and growth numbers for 2026",
+            "Top 5 trends that defined the year",
+            "Winners and losers: which categories grew",
+            "Supply chain shifts and their impact",
+            "Regulatory changes affecting importers",
+            "Amazon category performance for pet products",
+            "Key takeaways for 2027 planning",
+            "Predictions for the year ahead"
+          ]
+        },
+        {
+          "id": "BLOG-026",
+          "title": "EU REACH & CE Compliance for Pet Products: A Practical Guide",
+          "slug": "eu-reach-ce-compliance-pet-products",
+          "target_keyword": "EU REACH compliance pet products",
+          "pillar": "EU Market & Compliance",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "REACH regulation explained for pet product importers",
+            "CE Marking: which pet products need it",
+            "Substances of Very High Concern (SVHC) to avoid",
+            "Testing requirements and certified labs",
+            "Documentation you must keep for EU customs",
+            "GPSR (General Product Safety Regulation) update",
+            "How Entrol ensures EU compliance",
+            "Cost and timeline for compliance certification"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2027-01",
+      "articles": [
+        {
+          "id": "BLOG-027",
+          "title": "Pet Product Trends to Watch in 2027",
+          "slug": "pet-product-trends-2027",
+          "target_keyword": "pet product trends 2027",
+          "pillar": "Seasonal & Trends",
+          "money_page_link": "custom-pet-products",
+          "status": "pending",
+          "outline": [
+            "Smart tech and IoT in pet products",
+            "Sustainability goes mainstream",
+            "Premiumization: pet owners spending more",
+            "Health and wellness product expansion",
+            "Customization and personalization demand",
+            "New pet categories: reptiles, small animals",
+            "Social media-driven product trends",
+            "How manufacturers can prepare for these trends"
+          ]
+        },
+        {
+          "id": "BLOG-028",
+          "title": "How to Negotiate Better Factory Prices: Proven Tactics for Importers",
+          "slug": "negotiate-factory-prices-tactics",
+          "target_keyword": "negotiate factory prices China",
+          "pillar": "Manufacturing & OEM/ODM",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Understanding factory cost structure",
+            "Timing your negotiation: when to push for discounts",
+            "Volume commitments and tiered pricing",
+            "Payment terms as a negotiation lever",
+            "How to use competing quotes effectively",
+            "Long-term partnership discounts",
+            "Common factory negotiation tactics and how to counter",
+            "Red flags: when a low price is too good to be true"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2027-02",
+      "articles": [
+        {
+          "id": "BLOG-029",
+          "title": "Quality Inspection Checklist for Imported Pet Products",
+          "slug": "quality-inspection-checklist-pet-products",
+          "target_keyword": "pet product quality inspection checklist",
+          "pillar": "Logistics & Supply Chain",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Why third-party inspection is essential",
+            "Pre-production inspection: materials check",
+            "During-production inspection: mid-point quality check",
+            "Pre-shipment inspection: AQL sampling method",
+            "Critical defect categories for pet products",
+            "Checklist by product type: toys, apparel, bedding, trees",
+            "How to choose an inspection company",
+            "What to do when inspection fails"
+          ]
+        },
+        {
+          "id": "BLOG-030",
+          "title": "Dropshipping Pet Products in 2027: Is It Still Profitable?",
+          "slug": "dropshipping-pet-products-2027",
+          "target_keyword": "dropshipping pet products 2027",
+          "pillar": "Business Strategy & Growth",
+          "money_page_link": "wholesale-pet-products",
+          "status": "pending",
+          "outline": [
+            "State of pet product dropshipping in 2027",
+            "Pros: low upfront cost, no inventory risk",
+            "Cons: low margins, quality control issues, competition",
+            "Best pet product categories for dropshipping",
+            "How to find reliable dropshipping suppliers",
+            "Platforms: Shopify, Amazon, eBay, TikTok Shop",
+            "Marketing strategies for dropshipping stores",
+            "When to transition from dropshipping to private label"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2027-03",
+      "articles": [
+        {
+          "id": "BLOG-031",
+          "title": "Sustainable Materials for Pet Products: Eco-Friendly Manufacturing",
+          "slug": "sustainable-materials-pet-products",
+          "target_keyword": "sustainable pet product materials",
+          "pillar": "Manufacturing & OEM/ODM",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Why sustainability matters for B2B pet buyers",
+            "Recycled polyester and PET fabric for pet beds",
+            "Natural rubber and hemp for dog toys",
+            "Bamboo and FSC-certified wood for cat trees",
+            "Biodegradable packaging options",
+            "Certifications: GRS, GOTS, OEKO-TEX",
+            "Cost premium for sustainable materials",
+            "Marketing your eco-friendly products to retailers"
+          ]
+        },
+        {
+          "id": "BLOG-032",
+          "title": "Global Pet Expo and Trade Show Calendar 2027",
+          "slug": "pet-industry-trade-shows-2027",
+          "target_keyword": "pet industry trade shows 2027",
+          "pillar": "Trade Shows & Industry Events",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Why attend pet industry trade shows",
+            "Global Pet Expo (Orlando) – March 2027",
+            "Interzoo (Nuremberg) – May 2027",
+            "Canton Fair Phase 2 (Guangzhou) – April & October 2027",
+            "Zoomark International (Bologna) – dates TBD",
+            "SuperZoo (Las Vegas) – August 2027",
+            "How to plan your trade show calendar",
+            "Tips for maximizing ROI from each show"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2027-04",
+      "articles": [
+        {
+          "id": "BLOG-033",
+          "title": "Pet Grooming Products OEM: Brushes, Clippers, Shampoo Accessories",
+          "slug": "pet-grooming-products-oem-guide",
+          "target_keyword": "pet grooming products OEM",
+          "pillar": "Product-Specific",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Pet grooming market overview: size and growth",
+            "Product categories: brushes, clippers, nail grinders, shampoos",
+            "Material selection: silicone, stainless steel, wood",
+            "Electronic grooming tools: safety certifications needed",
+            "Custom branding: logo placement and packaging",
+            "MOQ and pricing by product type",
+            "Key manufacturing hubs for grooming tools",
+            "Quality testing for grooming products"
+          ]
+        },
+        {
+          "id": "BLOG-034",
+          "title": "Managing Your China Supply Chain: Tools, Tips, and Best Practices",
+          "slug": "manage-china-supply-chain-guide",
+          "target_keyword": "manage China supply chain",
+          "pillar": "Logistics & Supply Chain",
+          "money_page_link": "wholesale-pet-products",
+          "status": "pending",
+          "outline": [
+            "The 5 stages of supply chain management",
+            "Supplier communication: tools and cadence",
+            "Inventory management and reorder point formulas",
+            "Quality assurance systems you need",
+            "Freight forwarder selection and relationship management",
+            "Using technology: ERP, tracking, and visibility tools",
+            "Risk management: backup suppliers and contingency plans",
+            "When to hire a sourcing agent vs go direct"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2027-05",
+      "articles": [
+        {
+          "id": "BLOG-035",
+          "title": "Pet Product Packaging Design That Sells on Amazon and Retail Shelves",
+          "slug": "pet-product-packaging-design-guide",
+          "target_keyword": "pet product packaging design that sells",
+          "pillar": "Business Strategy & Growth",
+          "money_page_link": "private-label-pet-supplier",
+          "status": "pending",
+          "outline": [
+            "Why packaging design directly impacts sales",
+            "Amazon packaging requirements: frustration-free, SIOC",
+            "Retail shelf packaging: color, hierarchy, readability",
+            "Sustainable packaging: what consumers want in 2027",
+            "Packaging material options: cardboard, kraft, plastic",
+            "Design elements that communicate quality",
+            "Working with Chinese factories on packaging design",
+            "Cost breakdown: packaging budget by product type"
+          ]
+        },
+        {
+          "id": "BLOG-036",
+          "title": "How to Scale from Sample Order to Container Load: Growth Roadmap",
+          "slug": "scale-sample-to-container-order",
+          "target_keyword": "scale from sample to container order",
+          "pillar": "Business Strategy & Growth",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Phase 1: Sample order (50-200 units) – testing the market",
+            "Phase 2: Small batch (500-1000 units) – validating demand",
+            "Phase 3: Pallet order – proving repeat sales",
+            "Phase 4: LCL container – scaling efficiently",
+            "Phase 5: FCL container – maximum cost efficiency",
+            "Cash flow planning at each phase",
+            "Common mistakes when scaling too fast",
+            "When to diversify your supplier base"
+          ]
+        }
+      ]
+    },
+    {
+      "month": "2027-06",
+      "articles": [
+        {
+          "id": "BLOG-037",
+          "title": "Cat Furniture Market Analysis: Sizing the Global Opportunity",
+          "slug": "cat-furniture-market-analysis-2027",
+          "target_keyword": "cat furniture market analysis",
+          "pillar": "Product-Specific",
+          "money_page_link": "cat-tree-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Global cat furniture market size and CAGR",
+            "Regional breakdown: US, EU, Asia, rest of world",
+            "Product segment analysis: trees, towers, condos, wall-mounted",
+            "Price tier analysis: budget, mid-range, premium",
+            "Distribution channels: online vs retail vs specialty",
+            "Key players and competitive landscape",
+            "Growth drivers: cat ownership trends and humanization",
+            "Opportunities for new brands and manufacturers"
+          ]
+        },
+        {
+          "id": "BLOG-038",
+          "title": "Building Long-Term Factory Relationships That Reduce Costs",
+          "slug": "long-term-factory-relationships",
+          "target_keyword": "build factory relationships China",
+          "pillar": "Manufacturing & OEM/ODM",
+          "money_page_link": "oem-pet-products-manufacturer",
+          "status": "pending",
+          "outline": [
+            "Why factory relationships are your biggest asset",
+            "The trust-building timeline: 0-6-12-24 months",
+            "Communication cadence: WeChat, email, visits",
+            "How to be a 'preferred buyer' (and why it matters)",
+            "Exclusive designs and first-refusal agreements",
+            "Payment terms that reward loyalty",
+            "Handling problems without damaging the relationship",
+            "When to move on: signs a factory partnership isn't working"
+          ]
+        }
+      ]
+    }
+  ]
+}
