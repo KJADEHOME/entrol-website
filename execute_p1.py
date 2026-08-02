@@ -276,7 +276,7 @@ catalog_banner_html = '''
         <div style="font-size:2rem;margin-bottom:8px;">&#x1f4d6;</div>
         <h3 style="font-size:1.3rem;color:#1a1a2e;margin-bottom:8px;">Get the 2026 OEM Product Catalog</h3>
         <p style="color:#666;font-size:0.9rem;margin-bottom:20px;">71+ SKUs &bull; Factory Pricing Reference &bull; MOQ Guide &bull; Material Specs</p>
-        <form action="https://formsubmit.co/b.wu@entrol.com" method="POST" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:520px;margin:0 auto;">
+        <form action="https://formsubmit.co/wangyan@entrol.com" method="POST" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:520px;margin:0 auto;">
           <input type="hidden" name="_subject" value="[Entrol] Catalog Download Request">
           <input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_template" value="table">

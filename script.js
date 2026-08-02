@@ -90,7 +90,7 @@ if (inquiryForm) {
     const emailBody = Object.entries(body)
       .map(([k, v]) => `${k.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}: ${v}`)
       .join('\n');
-    const mailto = `mailto:b.wu@entrol.com?subject=${subject}&body=${encodeURIComponent(emailBody)}`;
+    const mailto = `mailto:wangyan@entrol.com?subject=${subject}&body=${encodeURIComponent(emailBody)}`;
 
     setTimeout(() => {
       btn.textContent = '✓ Opening email client…';

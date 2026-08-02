@@ -6,12 +6,12 @@
 
 ## 第一步：联系表单确认（无需注册）
 
-> 表单已配置为 **Formsubmit.co**（与 kjadehome 同款），邮件直接发到 `b.wu@entrol.com`。
+> 表单已配置为 **Formsubmit.co**（与 kjadehome 同款），邮件直接发到 `wangyan@entrol.com`。
 > 免费版每月 50 次提交，B2B 询盘够用。无需额外注册，直接使用即可。
 
 表单代码已配置：
 ```html
-<form action="https://formsubmit.co/b.wu@entrol.com" method="POST">
+<form action="https://formsubmit.co/wangyan@entrol.com" method="POST">
 ```
 
 ✅ **无需额外操作，跳过此步骤。**
@@ -103,7 +103,7 @@ nslookup www.entrol.com
    - [ ] 页面正常显示
    - [ ] HTTPS 小锁标志出现
    - [ ] 图片全部加载
-   - [ ] 联系表单可以提交（会发邮件到 b.wu@entrol.com）
+   - [ ] 联系表单可以提交（会发邮件到 wangyan@entrol.com）
 
 ---
 
@@ -148,13 +148,13 @@ nslookup www.entrol.com
 
 | 优先级 | 任务 |
 |--------|------|
-| ⭐⭐⭐ | 网站上线后，测试提交一次表单，确认 b.wu@entrol.com 能收到邮件 |
+| ⭐⭐⭐ | 网站上线后，测试提交一次表单，确认 wangyan@entrol.com 能收到邮件 |
 | ⭐⭐⭐ | 在 Google Search Console 查看覆盖率报告 |
 | ⭐⭐ | 注册 Google Analytics 4，在 index.html 加入追踪代码 |
-| ⭐⭐ | 在阿里云或 Google Domains 设置邮件 MX 记录（如需 b.wu@entrol.com 收信） |
+| ⭐⭐ | 在阿里云或 Google Domains 设置邮件 MX 记录（如需 wangyan@entrol.com 收信） |
 | ⭐ | 为每个产品页面添加更多图片的 alt 文字 |
 
 ---
 
 *本手册由 WorkBuddy 生成 · 2026-04-04*
-> 表单使用 Formsubmit.co（同 kjadehome 方案），邮件发到 b.wu@entrol.com
+> 表单使用 Formsubmit.co（同 kjadehome 方案），邮件发到 wangyan@entrol.com
