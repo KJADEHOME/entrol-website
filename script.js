@@ -150,30 +150,116 @@ function openInquiryFor(product) {
 }
 
 function submitInquiry(e) {
-  e.preventDefault();
-  var form = document.getElementById('inquiryForm');
-  var success = document.getElementById('inquirySuccess');
-  if (!form || !success) return;
-  // Track event
+  var form = e && e.currentTarget ? e.currentTarget : document.getElementById('inquiryForm');
+  if (!form) return false;
+
+  // All legacy quick-inquiry forms use the same reliable delivery endpoint.
+  // Do not show a success state until FormSubmit has actually accepted the POST.
+  form.action = 'https://formsubmit.co/wangyan@entrol.com';
+  form.method = 'POST';
+
+  var hiddenFields = {
+    _subject: '[Entrol] New Quick Inquiry',
+    _captcha: 'false',
+    _template: 'table',
+    _next: 'https://www.entrol.com/contact.html?sent=1',
+    source_page: window.location.href,
+    landing_page: sessionStorage.getItem('entrol_landing_page') || window.location.href,
+    referrer: document.referrer || 'direct'
+  };
+
+  Object.keys(hiddenFields).forEach(function(name) {
+    var input = form.querySelector('input[name="' + name + '"]');
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      form.appendChild(input);
+    }
+    input.value = hiddenFields[name];
+  });
+
+  var params = new URLSearchParams(window.location.search);
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function(name) {
+    var value = params.get(name) || sessionStorage.getItem('entrol_' + name);
+    if (!value) return;
+    var input = form.querySelector('input[name="' + name + '"]');
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      form.appendChild(input);
+    }
+    input.value = value;
+  });
+
+  // Track the submit attempt. The thank-you URL is the authoritative success signal.
   if (typeof gtag === 'function') {
     gtag('event', 'inquiry_submit', { event_category: 'conversion', event_label: 'quick_inquiry' });
   }
-  form.style.display = 'none';
-  success.style.display = 'block';
-  // Reset after delay
-  setTimeout(function() {
-    toggleInquiry();
-    setTimeout(function() {
-      form.style.display = '';
-      success.style.display = 'none';
-      form.reset();
-    }, 400);
-  }, 3000);
+  if (typeof plausible === 'function') {
+    plausible('inquiry_submit', { props: { source: 'quick_inquiry', page: window.location.pathname } });
+  }
+  if (window.dataLayer) {
+    window.dataLayer.push({ event: 'inquiry_submit', form_type: 'quick_inquiry', page_path: window.location.pathname });
+  }
+
+  return true;
 }
 
 // Sync inquiry product dropdown from query params
 document.addEventListener('DOMContentLoaded', function() {
   var params = new URLSearchParams(window.location.search);
+  if (!sessionStorage.getItem('entrol_landing_page')) {
+    sessionStorage.setItem('entrol_landing_page', window.location.href);
+  }
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function(name) {
+    var value = params.get(name);
+    if (value) sessionStorage.setItem('entrol_' + name, value);
+  });
+
+  // Enrich every native FormSubmit form with attribution before it leaves the page.
+  document.querySelectorAll('form[action*="formsubmit.co"]').forEach(function(form) {
+    form.addEventListener('submit', function() {
+      var attribution = {
+        source_page: window.location.href,
+        landing_page: sessionStorage.getItem('entrol_landing_page') || window.location.href,
+        referrer: document.referrer || 'direct'
+      };
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function(name) {
+        var value = params.get(name) || sessionStorage.getItem('entrol_' + name);
+        if (value) attribution[name] = value;
+      });
+      Object.keys(attribution).forEach(function(name) {
+        var input = form.querySelector('input[name="' + name + '"]');
+        if (!input) {
+          input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = name;
+          form.appendChild(input);
+        }
+        input.value = attribution[name];
+      });
+      if (window.dataLayer) {
+        window.dataLayer.push({ event: 'inquiry_submit', form_type: form.className || 'native_form', page_path: window.location.pathname });
+      }
+      if (typeof plausible === 'function') {
+        plausible('inquiry_submit', { props: { source: form.className || 'native_form', page: window.location.pathname } });
+      }
+    });
+  });
+
+  // The redirect is the authoritative client-side confirmation that the provider accepted a submission.
+  if (params.get('sent') === '1') {
+    if (window.dataLayer) window.dataLayer.push({ event: 'inquiry_success', page_path: window.location.pathname });
+    if (typeof gtag === 'function') gtag('event', 'generate_lead', { event_category: 'conversion', event_label: 'formsubmit_success' });
+    if (typeof plausible === 'function') plausible('inquiry_success', { props: { page: window.location.pathname } });
+  }
+  if (params.get('catalog') === 'sent') {
+    if (window.dataLayer) window.dataLayer.push({ event: 'catalog_success', page_path: window.location.pathname });
+    if (typeof gtag === 'function') gtag('event', 'generate_lead', { event_category: 'conversion', event_label: 'catalog_download' });
+    if (typeof plausible === 'function') plausible('catalog_success', { props: { page: window.location.pathname } });
+  }
   var product = params.get('product');
   if (product) {
     var select = document.getElementById('inqProduct');
