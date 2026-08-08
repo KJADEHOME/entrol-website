@@ -1,0 +1,2 @@
+[functions.entrol-submit-lead]
+verify_jwt = false

@@ -275,3 +275,92 @@ if (heroImg && heroImg.offsetParent !== null) {
     heroImg.style.transform = `translateY(${scrolled * 0.3}px)`;
   }, { passive: true });
 }
+
+// First-party durable lead capture. Success is shown only after durable storage.
+const ENTROL_LEAD_API_URL = 'https://jipgzavuxvnaisgxcvts.supabase.co/functions/v1/entrol-submit-lead';
+
+function entrolTrack(eventName, form) {
+  var formType = form.classList.contains('catalog-form') || form.querySelector('[name="catalog_request"]')
+    ? 'catalog'
+    : 'inquiry';
+  if (window.dataLayer) window.dataLayer.push({ event: eventName, form_type: formType, page_path: window.location.pathname });
+  if (typeof gtag === 'function' && eventName === 'inquiry_success') {
+    gtag('event', 'generate_lead', { event_category: 'conversion', event_label: 'first_party_lead_api' });
+  }
+  if (typeof plausible === 'function') plausible(eventName, { props: { source: formType, page: window.location.pathname } });
+}
+
+function entrolFormMessage(form, message, isError) {
+  var status = form.querySelector('.entrol-form-status');
+  if (!status) {
+    status = document.createElement('p');
+    status.className = 'entrol-form-status';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    status.style.marginTop = '12px';
+    status.style.fontSize = '0.9rem';
+    form.appendChild(status);
+  }
+  status.textContent = message;
+  status.style.color = isError ? '#b42318' : '#2f6b1f';
+}
+
+async function entrolSubmitLead(form) {
+  var button = form.querySelector('button[type="submit"], input[type="submit"]');
+  var originalText = button ? (button.textContent || button.value) : '';
+  if (button) {
+    button.disabled = true;
+    if (button.tagName === 'INPUT') button.value = 'Sending...';
+    else button.textContent = 'Sending...';
+  }
+
+  var fields = {};
+  new FormData(form).forEach(function(value, key) {
+    if (typeof value === 'string' && !key.startsWith('_')) fields[key] = value;
+  });
+  var params = new URLSearchParams(window.location.search);
+  fields.request_id = crypto.randomUUID();
+  fields.submission_type = form.classList.contains('catalog-form') || fields.catalog_request ? 'catalog' : 'inquiry';
+  fields.source_page = window.location.href;
+  fields.landing_page = sessionStorage.getItem('entrol_landing_page') || window.location.href;
+  fields.referrer = document.referrer || 'direct';
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function(name) {
+    fields[name] = params.get(name) || sessionStorage.getItem('entrol_' + name) || '';
+  });
+
+  try {
+    entrolTrack('inquiry_submit', form);
+    var response = await fetch(ENTROL_LEAD_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Request-Id': fields.request_id },
+      body: JSON.stringify(fields)
+    });
+    var result = await response.json().catch(function() { return {}; });
+    if (!response.ok || !result.ok) throw new Error(result.error || 'submission_failed');
+
+    form.reset();
+    entrolFormMessage(form, fields.submission_type === 'catalog'
+      ? 'Request received. Our team will send the catalog to your business email.'
+      : 'Inquiry received. Our team will contact you within 24 hours.', false);
+    entrolTrack(fields.submission_type === 'catalog' ? 'catalog_success' : 'inquiry_success', form);
+  } catch (error) {
+    console.error('Entrol lead submission failed:', error);
+    entrolFormMessage(form, 'We could not save your inquiry. Please retry, email wangyan@entrol.com, or contact us on WhatsApp.', true);
+  } finally {
+    if (button) {
+      button.disabled = false;
+      if (button.tagName === 'INPUT') button.value = originalText;
+      else button.textContent = originalText;
+    }
+  }
+}
+
+document.addEventListener('submit', function(event) {
+  var form = event.target;
+  if (!(form instanceof HTMLFormElement)) return;
+  var isInquiry = (form.action || '').includes('formsubmit.co') || (form.getAttribute('onsubmit') || '').includes('submitInquiry');
+  if (!isInquiry || ENTROL_LEAD_API_URL.startsWith('__')) return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  entrolSubmitLead(form);
+}, true);
