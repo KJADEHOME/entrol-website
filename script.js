@@ -260,6 +260,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof gtag === 'function') gtag('event', 'generate_lead', { event_category: 'conversion', event_label: 'catalog_download' });
     if (typeof plausible === 'function') plausible('catalog_success', { props: { page: window.location.pathname } });
   }
+  document.querySelectorAll('[data-catalog-download]').forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (window.dataLayer) window.dataLayer.push({ event: 'catalog_download', file_name: 'Entrol-Pet-Products-Catalog-2026.pdf', page_path: window.location.pathname });
+      if (typeof gtag === 'function') gtag('event', 'file_download', { event_category: 'conversion', event_label: 'pet_products_catalog_2026' });
+      if (typeof plausible === 'function') plausible('catalog_download', { props: { page: window.location.pathname } });
+    });
+  });
   var product = params.get('product');
   if (product) {
     var select = document.getElementById('inqProduct');
