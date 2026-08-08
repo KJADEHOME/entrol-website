@@ -136,5 +136,66 @@ Deno.serve(async (req: Request) => {
     return jsonResponse(origin, { ok: false, error: "storage_failed" }, 500);
   }
 
-  return jsonResponse(origin, { ok: true, lead_id: data.id, duplicate: false }, 201);
+  const resendApiKey = Deno.env.get("RESEND_API_KEY");
+  const notificationTo = Deno.env.get("ENTROL_NOTIFICATION_TO") || "wangyan@entrol.com";
+  const notificationFrom = Deno.env.get("ENTROL_NOTIFICATION_FROM") || "Entrol Leads <leads@updates.entrol.com>";
+  let notificationStatus = "not_configured";
+
+  if (resendApiKey) {
+    const subjectName = row.company || row.name || row.email || row.contact || "New lead";
+    const notificationText = [
+      "A new Entrol website lead was stored successfully.",
+      "",
+      `Lead ID: ${data.id}`,
+      `Type: ${row.submission_type}`,
+      `Name: ${row.name || "-"}`,
+      `Company: ${row.company || "-"}`,
+      `Email: ${row.email || "-"}`,
+      `Contact: ${row.contact || "-"}`,
+      `Product: ${row.product_interest || "-"}`,
+      `Quantity: ${row.quantity || "-"}`,
+      `Message: ${row.message || "-"}`,
+      `Source: ${row.source_page || "-"}`,
+    ].join("\n");
+
+    try {
+      const emailResponse = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendApiKey}` },
+        body: JSON.stringify({
+          from: notificationFrom,
+          to: [notificationTo],
+          reply_to: row.email || undefined,
+          subject: `[Entrol Lead] ${subjectName}`.slice(0, 200),
+          text: notificationText,
+        }),
+      });
+      const emailResult = await emailResponse.json().catch(() => ({}));
+      notificationStatus = emailResponse.ok ? "sent" : "failed";
+      await admin.from("entrol_leads").update({
+        notification_status: notificationStatus,
+        notification_provider: "resend",
+        notification_provider_id: emailResponse.ok && typeof emailResult.id === "string" ? emailResult.id : null,
+        notification_attempted_at: new Date().toISOString(),
+        notification_error: emailResponse.ok ? null : String(emailResult.message || `HTTP ${emailResponse.status}`).slice(0, 1000),
+      }).eq("id", data.id);
+    } catch (notificationError) {
+      notificationStatus = "failed";
+      await admin.from("entrol_leads").update({
+        notification_status: "failed",
+        notification_provider: "resend",
+        notification_attempted_at: new Date().toISOString(),
+        notification_error: String(notificationError).slice(0, 1000),
+      }).eq("id", data.id);
+    }
+  } else {
+    await admin.from("entrol_leads").update({ notification_status: "not_configured" }).eq("id", data.id);
+  }
+
+  return jsonResponse(origin, {
+    ok: true,
+    lead_id: data.id,
+    duplicate: false,
+    notification_status: notificationStatus,
+  }, 201);
 });
