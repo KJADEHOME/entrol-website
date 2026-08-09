@@ -130,10 +130,18 @@ function toggleInquiry() {
     sidebar.classList.remove('open');
     overlay.classList.remove('open');
     tab.classList.remove('hidden');
+    document.body.classList.remove('inquiry-open');
+    tab.setAttribute('aria-expanded', 'false');
+    sidebar.setAttribute('aria-hidden', 'true');
   } else {
     sidebar.classList.add('open');
     overlay.classList.add('open');
     tab.classList.add('hidden');
+    document.body.classList.add('inquiry-open');
+    tab.setAttribute('aria-expanded', 'true');
+    sidebar.setAttribute('aria-hidden', 'false');
+    var firstField = sidebar.querySelector('input:not([type="hidden"]), select, textarea');
+    if (firstField) setTimeout(function() { firstField.focus(); }, 180);
   }
 }
 
@@ -147,6 +155,25 @@ function openInquiryFor(product) {
   sidebar.classList.add('open');
   overlay.classList.add('open');
   tab.classList.add('hidden');
+  document.body.classList.add('inquiry-open');
+  tab.setAttribute('aria-expanded', 'true');
+  sidebar.setAttribute('aria-hidden', 'false');
+  var triggerText = document.activeElement ? (document.activeElement.textContent || '').trim() : '';
+  var eventData = {
+    event: 'inquiry_open',
+    product_interest: product || 'unspecified',
+    trigger_text: triggerText,
+    page_path: window.location.pathname
+  };
+  if (window.dataLayer) window.dataLayer.push(eventData);
+  if (typeof gtag === 'function') {
+    gtag('event', 'view_form', { form_name: 'quick_inquiry', product_interest: product || 'unspecified' });
+  }
+  if (typeof plausible === 'function') {
+    plausible('inquiry_open', { props: { product: product || 'unspecified', page: window.location.pathname } });
+  }
+  var firstField = sidebar.querySelector('input:not([type="hidden"]), select, textarea');
+  if (firstField) setTimeout(function() { firstField.focus(); }, 180);
 }
 
 function submitInquiry(e) {
@@ -218,6 +245,30 @@ document.addEventListener('DOMContentLoaded', function() {
     if (value) sessionStorage.setItem('entrol_' + name, value);
   });
 
+  var inquirySidebar = document.getElementById('inquirySidebar');
+  var inquiryTab = document.getElementById('inquiryTab');
+  if (inquirySidebar) {
+    inquirySidebar.setAttribute('role', 'dialog');
+    inquirySidebar.setAttribute('aria-modal', 'true');
+    inquirySidebar.setAttribute('aria-label', 'Quick inquiry');
+    inquirySidebar.setAttribute('aria-hidden', 'true');
+  }
+  if (inquiryTab) {
+    inquiryTab.setAttribute('role', 'button');
+    inquiryTab.setAttribute('tabindex', '0');
+    inquiryTab.setAttribute('aria-controls', 'inquirySidebar');
+    inquiryTab.setAttribute('aria-expanded', 'false');
+    inquiryTab.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggleInquiry();
+      }
+    });
+  }
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && inquirySidebar && inquirySidebar.classList.contains('open')) toggleInquiry();
+  });
+
   // Enrich every native FormSubmit form with attribution before it leaves the page.
   document.querySelectorAll('form[action*="formsubmit.co"]').forEach(function(form) {
     form.addEventListener('submit', function() {
@@ -262,9 +313,18 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   document.querySelectorAll('[data-catalog-download]').forEach(function(link) {
     link.addEventListener('click', function() {
-      if (window.dataLayer) window.dataLayer.push({ event: 'catalog_download', file_name: 'Entrol-Pet-Products-Catalog-2026.pdf', page_path: window.location.pathname });
-      if (typeof gtag === 'function') gtag('event', 'file_download', { event_category: 'conversion', event_label: 'pet_products_catalog_2026' });
-      if (typeof plausible === 'function') plausible('catalog_download', { props: { page: window.location.pathname } });
+      var placement = link.closest('.blog-conversion-panel') ? 'article_conversion'
+        : link.closest('.catalog-section') ? 'homepage_catalog'
+        : 'commercial_catalog';
+      var catalogContext = {
+        page: window.location.pathname,
+        placement: placement,
+        link_text: (link.textContent || '').trim()
+      };
+      sessionStorage.setItem('entrol_catalog_touch', JSON.stringify(catalogContext));
+      if (window.dataLayer) window.dataLayer.push({ event: 'catalog_download', file_name: 'Entrol-Pet-Products-Catalog-2026.pdf', page_path: catalogContext.page, catalog_placement: placement, link_text: catalogContext.link_text });
+      if (typeof gtag === 'function') gtag('event', 'file_download', { event_category: 'conversion', event_label: 'pet_products_catalog_2026', catalog_placement: placement, page_path: catalogContext.page });
+      if (typeof plausible === 'function') plausible('catalog_download', { props: { page: catalogContext.page, placement: placement } });
     });
   });
 
