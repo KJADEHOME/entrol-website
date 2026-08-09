@@ -23,6 +23,10 @@ const TEXT_LIMITS: Record<string, number> = {
   utm_campaign: 240,
   utm_content: 500,
   utm_term: 500,
+  catalog_touch_page: 2000,
+  catalog_touch_placement: 80,
+  catalog_touched_at: 80,
+  inquiry_trigger: 500,
 };
 
 function corsHeaders(origin: string | null) {
@@ -54,6 +58,13 @@ function first(payload: Record<string, unknown>, names: string[], max: number): 
     if (value) return value;
   }
   return null;
+}
+
+function cleanTimestamp(value: unknown): string | null {
+  const text = clean(value, TEXT_LIMITS.catalog_touched_at);
+  if (!text) return null;
+  const parsed = Date.parse(text);
+  return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
 }
 
 Deno.serve(async (req: Request) => {
@@ -125,6 +136,10 @@ Deno.serve(async (req: Request) => {
     utm_campaign: clean(payload.utm_campaign, TEXT_LIMITS.utm_campaign),
     utm_content: clean(payload.utm_content, TEXT_LIMITS.utm_content),
     utm_term: clean(payload.utm_term, TEXT_LIMITS.utm_term),
+    catalog_touch_page: clean(payload.catalog_touch_page, TEXT_LIMITS.catalog_touch_page),
+    catalog_touch_placement: clean(payload.catalog_touch_placement, TEXT_LIMITS.catalog_touch_placement),
+    catalog_touched_at: cleanTimestamp(payload.catalog_touched_at),
+    inquiry_trigger: clean(payload.inquiry_trigger, TEXT_LIMITS.inquiry_trigger),
     user_agent: clean(req.headers.get("user-agent"), 1000),
     raw_payload: safePayload,
   };
@@ -156,6 +171,11 @@ Deno.serve(async (req: Request) => {
       `Quantity: ${row.quantity || "-"}`,
       `Message: ${row.message || "-"}`,
       `Source: ${row.source_page || "-"}`,
+      `Landing page: ${row.landing_page || "-"}`,
+      `Campaign: ${row.utm_campaign || "-"}`,
+      `Catalog touch: ${row.catalog_touch_placement || "-"} | ${row.catalog_touch_page || "-"}`,
+      `Catalog touched at: ${row.catalog_touched_at || "-"}`,
+      `Inquiry trigger: ${row.inquiry_trigger || "-"}`,
     ].join("\n");
 
     try {

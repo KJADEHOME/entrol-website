@@ -165,6 +165,12 @@ function openInquiryFor(product) {
     trigger_text: triggerText,
     page_path: window.location.pathname
   };
+  sessionStorage.setItem('entrol_inquiry_context', JSON.stringify({
+    product_interest: product || '',
+    trigger_text: triggerText,
+    page: window.location.pathname,
+    opened_at: new Date().toISOString()
+  }));
   if (window.dataLayer) window.dataLayer.push(eventData);
   if (typeof gtag === 'function') {
     gtag('event', 'view_form', { form_name: 'quick_inquiry', product_interest: product || 'unspecified' });
@@ -319,7 +325,8 @@ document.addEventListener('DOMContentLoaded', function() {
       var catalogContext = {
         page: window.location.pathname,
         placement: placement,
-        link_text: (link.textContent || '').trim()
+        link_text: (link.textContent || '').trim(),
+        touched_at: new Date().toISOString()
       };
       sessionStorage.setItem('entrol_catalog_touch', JSON.stringify(catalogContext));
       if (window.dataLayer) window.dataLayer.push({ event: 'catalog_download', file_name: 'Entrol-Pet-Products-Catalog-2026.pdf', page_path: catalogContext.page, catalog_placement: placement, link_text: catalogContext.link_text });
@@ -440,6 +447,24 @@ async function entrolSubmitLead(form) {
   ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function(name) {
     fields[name] = params.get(name) || sessionStorage.getItem('entrol_' + name) || '';
   });
+  try {
+    var catalogTouch = JSON.parse(sessionStorage.getItem('entrol_catalog_touch') || 'null');
+    if (catalogTouch && typeof catalogTouch === 'object') {
+      fields.catalog_touch_page = catalogTouch.page || '';
+      fields.catalog_touch_placement = catalogTouch.placement || '';
+      fields.catalog_touched_at = catalogTouch.touched_at || '';
+    }
+  } catch (_) {
+    sessionStorage.removeItem('entrol_catalog_touch');
+  }
+  try {
+    var inquiryContext = JSON.parse(sessionStorage.getItem('entrol_inquiry_context') || 'null');
+    if (inquiryContext && typeof inquiryContext === 'object') {
+      fields.inquiry_trigger = inquiryContext.trigger_text || '';
+    }
+  } catch (_) {
+    sessionStorage.removeItem('entrol_inquiry_context');
+  }
 
   try {
     entrolTrack('inquiry_submit', form);
