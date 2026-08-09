@@ -295,6 +295,24 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+
+  document.querySelectorAll('[data-related-insight]').forEach(function(link) {
+    link.addEventListener('click', function() {
+      var target = link.getAttribute('href') || '';
+      var eventData = {
+        event: 'related_insight_click',
+        source_path: window.location.pathname,
+        target_path: target
+      };
+      if (window.dataLayer) window.dataLayer.push(eventData);
+      if (typeof gtag === 'function') {
+        gtag('event', 'select_content', { content_type: 'related_insight', item_id: target });
+      }
+      if (typeof plausible === 'function') {
+        plausible('related_insight_click', { props: { source: window.location.pathname, target: target } });
+      }
+    });
+  });
   var product = params.get('product');
   if (product) {
     var select = document.getElementById('inqProduct');
