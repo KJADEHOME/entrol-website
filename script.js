@@ -267,6 +267,34 @@ document.addEventListener('DOMContentLoaded', function() {
       if (typeof plausible === 'function') plausible('catalog_download', { props: { page: window.location.pathname } });
     });
   });
+
+  document.querySelectorAll('[data-share-channel]').forEach(function(control) {
+    control.addEventListener('click', function(event) {
+      var channel = control.getAttribute('data-share-channel') || 'unknown';
+      var tracked = {
+        event: 'content_share',
+        share_channel: channel,
+        content_path: window.location.pathname
+      };
+      if (window.dataLayer) window.dataLayer.push(tracked);
+      if (typeof gtag === 'function') {
+        gtag('event', 'share', { method: channel, content_type: 'article', item_id: window.location.pathname });
+      }
+      if (typeof plausible === 'function') {
+        plausible('content_share', { props: { channel: channel, page: window.location.pathname } });
+      }
+
+      if (channel !== 'copy_link') return;
+      event.preventDefault();
+      var shareUrl = control.getAttribute('data-share-url') || window.location.href;
+      var status = control.closest('.article-share')?.querySelector('.article-share-status');
+      navigator.clipboard.writeText(shareUrl).then(function() {
+        if (status) status.textContent = 'Tracked link copied.';
+      }).catch(function() {
+        if (status) status.textContent = 'Copy failed. Please copy the browser address.';
+      });
+    });
+  });
   var product = params.get('product');
   if (product) {
     var select = document.getElementById('inqProduct');
