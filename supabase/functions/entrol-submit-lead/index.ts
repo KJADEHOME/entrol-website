@@ -76,6 +76,63 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
+type ScorableLead = {
+  email: string | null;
+  contact: string | null;
+  company: string | null;
+  product_interest: string | null;
+  quantity: string | null;
+  target_market: string | null;
+  message: string | null;
+  utm_source: string | null;
+  catalog_touch_page: string | null;
+  catalog_touch_placement: string | null;
+};
+
+function scoreLead(lead: ScorableLead) {
+  let score = 0;
+  const reasons: string[] = [];
+  const add = (points: number, reason: string) => {
+    score += points;
+    reasons.push(`${reason} (+${points})`);
+  };
+
+  if (lead.company) add(15, "company provided");
+  if (lead.product_interest) add(15, "product interest provided");
+  if (lead.target_market) add(10, "target market provided");
+  if (lead.contact) add(5, "direct contact provided");
+  if (lead.utm_source) add(5, "attributed traffic source");
+  if (lead.catalog_touch_page || lead.catalog_touch_placement) add(10, "catalog engagement");
+
+  if (lead.quantity) {
+    add(15, "quantity provided");
+    const quantityNumber = Number((lead.quantity.match(/[\d,.]+/)?.[0] || "").replace(/[,\s]/g, ""));
+    if (Number.isFinite(quantityNumber) && quantityNumber >= 500) add(10, "quantity at least 500");
+    else if (Number.isFinite(quantityNumber) && quantityNumber >= 100) add(5, "quantity at least 100");
+  }
+
+  const messageLength = lead.message?.length || 0;
+  if (messageLength >= 80) add(10, "detailed message");
+  if (messageLength >= 200) add(5, "high-detail message");
+
+  const commercialText = [lead.company, lead.product_interest, lead.quantity, lead.target_market, lead.message]
+    .filter(Boolean)
+    .join(" ");
+  if (/\b(wholesale|distributor|retailer|import(?:er)?|bulk|oem|odm|private[ -]?label|brand|store|shop|order|boutique|commande|grossiste|distributeur|importateur|marque|achat|quantit[eé]|catalogue)\b/i.test(commercialText)) {
+    add(10, "commercial buying intent");
+  }
+
+  const emailDomain = lead.email?.split("@").pop()?.toLowerCase() || "";
+  const freeEmailDomains = new Set([
+    "gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "icloud.com", "qq.com", "163.com", "126.com",
+  ]);
+  if (emailDomain && !freeEmailDomains.has(emailDomain)) add(10, "business email domain");
+
+  const cappedScore = Math.min(score, 100);
+  const priority = cappedScore >= 65 ? "HOT" : cappedScore >= 35 ? "WARM" : "COLD";
+  return { score: cappedScore, priority, reasons };
+}
+
 function customerReplyContent(row: {
   name: string | null;
   company: string | null;
@@ -184,7 +241,7 @@ Deno.serve(async (req: Request) => {
   if (!secretKey || !supabaseUrl) return jsonResponse(origin, { ok: false, error: "server_not_configured" }, 500);
 
   const admin = createClient(supabaseUrl, secretKey, { auth: { persistSession: false, autoRefreshToken: false } });
-  const row = {
+  const normalizedLead = {
     request_id: requestIdText,
     submission_type: submissionType,
     name: first(payload, ["name", "first-name", "first_name"], TEXT_LIMITS.name),
@@ -208,8 +265,16 @@ Deno.serve(async (req: Request) => {
     catalog_touched_at: cleanTimestamp(payload.catalog_touched_at),
     inquiry_trigger: clean(payload.inquiry_trigger, TEXT_LIMITS.inquiry_trigger),
     user_agent: clean(req.headers.get("user-agent"), 1000),
-    raw_payload: safePayload,
   };
+  const leadScoring = scoreLead(normalizedLead);
+  const scoredPayload = {
+    ...safePayload,
+    lead_score: leadScoring.score,
+    lead_priority: leadScoring.priority,
+    lead_score_reasons: leadScoring.reasons,
+    lead_scored_at: new Date().toISOString(),
+  };
+  const row = { ...normalizedLead, raw_payload: scoredPayload };
 
   const { data, error } = await admin.from("entrol_leads").insert(row).select("id").single();
   if (error?.code === "23505") return jsonResponse(origin, { ok: true, duplicate: true }, 200);
@@ -231,6 +296,9 @@ Deno.serve(async (req: Request) => {
       "A new Entrol website lead was stored successfully.",
       "",
       `Lead ID: ${data.id}`,
+      `Priority: ${leadScoring.priority}`,
+      `Lead score: ${leadScoring.score}/100`,
+      `Score reasons: ${leadScoring.reasons.join("; ") || "No qualifying signals"}`,
       `Type: ${row.submission_type}`,
       `Name: ${row.name || "-"}`,
       `Company: ${row.company || "-"}`,
@@ -238,6 +306,7 @@ Deno.serve(async (req: Request) => {
       `Contact: ${row.contact || "-"}`,
       `Product: ${row.product_interest || "-"}`,
       `Quantity: ${row.quantity || "-"}`,
+      `Target market: ${row.target_market || "-"}`,
       `Message: ${row.message || "-"}`,
       `Source: ${row.source_page || "-"}`,
       `Landing page: ${row.landing_page || "-"}`,
@@ -255,7 +324,7 @@ Deno.serve(async (req: Request) => {
           from: notificationFrom,
           to: [notificationTo],
           reply_to: row.email || undefined,
-          subject: `[Entrol Lead] ${subjectName}`.slice(0, 200),
+          subject: `[${leadScoring.priority} ${leadScoring.score}] [Entrol Lead] ${subjectName}`.slice(0, 200),
           text: notificationText,
         }),
       });
@@ -310,7 +379,7 @@ Deno.serve(async (req: Request) => {
 
     await admin.from("entrol_leads").update({
       raw_payload: {
-        ...safePayload,
+        ...scoredPayload,
         customer_auto_reply_status: customerReplyStatus,
         customer_auto_reply_provider: "resend",
         customer_auto_reply_provider_id: customerReplyProviderId,
@@ -326,5 +395,7 @@ Deno.serve(async (req: Request) => {
     duplicate: false,
     notification_status: notificationStatus,
     customer_reply_status: customerReplyStatus,
+    lead_priority: leadScoring.priority,
+    lead_score: leadScoring.score,
   }, 201);
 });
