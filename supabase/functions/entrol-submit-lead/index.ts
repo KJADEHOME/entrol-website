@@ -67,6 +67,73 @@ function cleanTimestamp(value: unknown): string | null {
   return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function customerReplyContent(row: {
+  name: string | null;
+  company: string | null;
+  submission_type: string;
+  product_interest: string | null;
+}) {
+  const greetingName = row.name || row.company;
+  const greeting = greetingName ? `Hello ${greetingName},` : "Hello,";
+  const requestSummary = row.product_interest
+    ? `We have recorded your interest in: ${row.product_interest}.`
+    : "We have recorded your product request.";
+  const subject = row.submission_type === "catalog"
+    ? "Your Entrol pet products catalog and next steps"
+    : "We received your Entrol product inquiry";
+  const catalogUrl = "https://www.entrol.com/assets/Entrol-Pet-Products-Catalog-2026.pdf";
+  const contactUrl = "https://www.entrol.com/contact.html";
+  const text = [
+    greeting,
+    "",
+    "Thank you for contacting Entrol. Your inquiry has been received successfully, and our sales team will review it and reply within one business day.",
+    requestSummary,
+    "",
+    `Download our 2026 pet products catalog: ${catalogUrl}`,
+    "",
+    "Please reply with the product codes, estimated quantities, destination country and any private-label or packaging requirements. We will then confirm current availability, MOQ, pricing, production lead time and shipping options.",
+    "",
+    "For small direct-ship orders, international freight can be relatively high. Bulk purchasing and consolidated shipments are usually more economical; the best option depends on the products and destination.",
+    "",
+    "No price, stock level, production date or freight cost is confirmed until our sales team sends a written quotation.",
+    "",
+    `Contact page: ${contactUrl}`,
+    "Email: wangyan@entrol.com",
+    "WhatsApp: +86 152 6313 0999",
+    "",
+    "Best regards,",
+    "Entrol Sales Team",
+    "Weihai Yuanchuang Import & Export Co., Ltd.",
+  ].join("\n");
+  const html = `<!doctype html>
+<html lang="en"><body style="margin:0;background:#f4f7f9;font-family:Arial,sans-serif;color:#1f2d38">
+<div style="max-width:640px;margin:0 auto;padding:28px 18px">
+  <div style="background:#ffffff;border:1px solid #dde6ec;border-radius:14px;padding:30px">
+    <p style="margin:0 0 18px;font-size:16px">${escapeHtml(greeting)}</p>
+    <h1 style="margin:0 0 16px;color:#17324d;font-size:24px">Thank you for contacting Entrol</h1>
+    <p style="margin:0 0 14px;line-height:1.65">Your inquiry has been received successfully. Our sales team will review it and reply within one business day.</p>
+    <p style="margin:0 0 20px;line-height:1.65">${escapeHtml(requestSummary)}</p>
+    <p style="margin:22px 0"><a href="${catalogUrl}" style="display:inline-block;padding:12px 18px;border-radius:8px;background:#246b9e;color:#ffffff;text-decoration:none;font-weight:700">Download the 2026 Pet Products Catalog</a></p>
+    <p style="margin:0 0 14px;line-height:1.65">Please reply with the product codes, estimated quantities, destination country and any private-label or packaging requirements. We will then confirm current availability, MOQ, pricing, production lead time and shipping options.</p>
+    <p style="margin:0 0 14px;line-height:1.65">For small direct-ship orders, international freight can be relatively high. Bulk purchasing and consolidated shipments are usually more economical; the best option depends on the products and destination.</p>
+    <p style="margin:18px 0;padding:12px 14px;border-left:4px solid #d69b2d;background:#fff8e8;line-height:1.55"><strong>Quotation notice:</strong> No price, stock level, production date or freight cost is confirmed until our sales team sends a written quotation.</p>
+    <p style="margin:20px 0 0;line-height:1.65">Email: <a href="mailto:wangyan@entrol.com">wangyan@entrol.com</a><br>WhatsApp: <a href="https://wa.me/8615263130999">+86 152 6313 0999</a><br><a href="${contactUrl}">Contact Entrol</a></p>
+    <p style="margin:24px 0 0;line-height:1.55">Best regards,<br><strong>Entrol Sales Team</strong><br>Weihai Yuanchuang Import &amp; Export Co., Ltd.</p>
+  </div>
+</div>
+</body></html>`;
+  return { subject, text, html };
+}
+
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("origin");
 
@@ -154,7 +221,9 @@ Deno.serve(async (req: Request) => {
   const resendApiKey = Deno.env.get("RESEND_API_KEY");
   const notificationTo = Deno.env.get("ENTROL_NOTIFICATION_TO") || "wangyan@entrol.com";
   const notificationFrom = Deno.env.get("ENTROL_NOTIFICATION_FROM") || "Entrol Leads <leads@updates.entrol.com>";
+  const customerReplyFrom = Deno.env.get("ENTROL_CUSTOMER_REPLY_FROM") || notificationFrom;
   let notificationStatus = "not_configured";
+  let customerReplyStatus = row.email ? "not_configured" : "not_applicable";
 
   if (resendApiKey) {
     const subjectName = row.company || row.name || row.email || row.contact || "New lead";
@@ -212,10 +281,50 @@ Deno.serve(async (req: Request) => {
     await admin.from("entrol_leads").update({ notification_status: "not_configured" }).eq("id", data.id);
   }
 
+  if (resendApiKey && row.email) {
+    const replyContent = customerReplyContent(row);
+    let customerReplyProviderId: string | null = null;
+    let customerReplyError: string | null = null;
+    const customerReplyAttemptedAt = new Date().toISOString();
+    try {
+      const customerResponse = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendApiKey}` },
+        body: JSON.stringify({
+          from: customerReplyFrom,
+          to: [row.email],
+          reply_to: notificationTo,
+          subject: replyContent.subject,
+          text: replyContent.text,
+          html: replyContent.html,
+        }),
+      });
+      const customerResult = await customerResponse.json().catch(() => ({}));
+      customerReplyStatus = customerResponse.ok ? "sent" : "failed";
+      customerReplyProviderId = customerResponse.ok && typeof customerResult.id === "string" ? customerResult.id : null;
+      customerReplyError = customerResponse.ok ? null : String(customerResult.message || `HTTP ${customerResponse.status}`).slice(0, 500);
+    } catch (customerError) {
+      customerReplyStatus = "failed";
+      customerReplyError = String(customerError).slice(0, 500);
+    }
+
+    await admin.from("entrol_leads").update({
+      raw_payload: {
+        ...safePayload,
+        customer_auto_reply_status: customerReplyStatus,
+        customer_auto_reply_provider: "resend",
+        customer_auto_reply_provider_id: customerReplyProviderId,
+        customer_auto_reply_attempted_at: customerReplyAttemptedAt,
+        customer_auto_reply_error: customerReplyError,
+      },
+    }).eq("id", data.id);
+  }
+
   return jsonResponse(origin, {
     ok: true,
     lead_id: data.id,
     duplicate: false,
     notification_status: notificationStatus,
+    customer_reply_status: customerReplyStatus,
   }, 201);
 });
