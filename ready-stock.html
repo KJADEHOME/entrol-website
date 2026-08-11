@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ready Stock Pet Products & Weekly Picks | Entrol</title>
+  <meta name="description" content="Build a non-binding B2B purchase intent from Entrol's verified ready-stock pet products and weekly sourcing picks. Prices, stock and freight are confirmed before order.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://www.entrol.com/ready-stock.html">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ready-stock.css">
+</head>
+<body>
+  <nav class="nav scrolled">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><img src="assets/logo.png" alt="Entrol" class="logo-img"></a>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="ready-stock.html" class="active">Ready Stock</a></li>
+        <li><a href="wholesale-pet-products.html">Wholesale</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="btn-nav">Get in Touch</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="mobile-menu">
+    <a href="index.html">Home</a><a href="products.html">Products</a><a href="ready-stock.html">Ready Stock</a><a href="wholesale-pet-products.html">Wholesale</a><a href="contact.html">Get in Touch</a>
+  </div>
+
+  <header class="rs-hero">
+    <div class="rs-hero-inner">
+      <p class="rs-kicker">Verified weekly selection</p>
+      <h1>Ready Stock &amp; Sourcing Picks</h1>
+      <p>Select verified products, enter intended quantities and request a combined product and freight quotation. This page creates a non-binding purchase intent, not a paid order.</p>
+      <div class="rs-status-line"><span id="rs-updated">Loading verified product data...</span><span>Stock verified before display</span><span>Freight confirmed before order</span></div>
+    </div>
+  </header>
+
+  <main class="rs-main">
+    <div class="rs-notice"><strong>How it works:</strong> choose products, add intended quantities, select a destination and submit your list. Entrol will confirm stock, final unit pricing, shipping, duties and delivery terms before issuing a formal quotation.</div>
+    <div class="rs-toolbar">
+      <input class="rs-control" id="rs-search" type="search" placeholder="Search by SKU, product or material" aria-label="Search products">
+      <select class="rs-control" id="rs-category" aria-label="Filter by category"><option value="">All categories</option></select>
+      <button class="rs-cart-button" type="button" onclick="document.getElementById('rs-cart').scrollIntoView({behavior:'smooth'})">Intent list (<span id="rs-cart-count">0</span>)</button>
+    </div>
+
+    <div class="rs-layout">
+      <section class="rs-grid" id="ready-stock-grid" aria-live="polite"><div class="rs-empty"><h2>Loading verified products...</h2></div></section>
+
+      <aside class="rs-cart" id="rs-cart">
+        <div class="rs-cart-head"><h2>Purchase intent</h2><span>Non-binding</span></div>
+        <div class="rs-cart-items" id="rs-cart-items"><p class="rs-cart-empty">Select verified products to create a purchase intent.</p></div>
+        <div class="rs-totals">
+          <div class="rs-total-line"><span>Product subtotal</span><strong id="rs-subtotal">$0.00</strong></div>
+          <div class="rs-total-line"><span>Estimated freight</span><strong id="rs-shipping">To be quoted</strong></div>
+          <div class="rs-total-line total"><span>Estimated total</span><strong id="rs-total">$0.00 + freight</strong></div>
+          <p class="rs-quote-note">Estimate only. Final price, stock, freight, duties and taxes require confirmation.</p>
+        </div>
+        <form id="ready-stock-intent-form" class="rs-form" action="https://formsubmit.co/wangyan@entrol.com" method="POST">
+          <input type="hidden" name="_subject" value="[Entrol] Ready Stock Purchase Intent">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="product" value="">
+          <input type="hidden" name="quantity" value="">
+          <input type="hidden" name="message" value="">
+          <input type="hidden" name="inquiry_trigger" value="ready_stock_purchase_intent">
+          <label for="rs-name">Name *</label><input id="rs-name" name="name" autocomplete="name" required>
+          <label for="rs-company">Company *</label><input id="rs-company" name="company" autocomplete="organization" required>
+          <label for="rs-email">Business email *</label><input id="rs-email" name="email" type="email" autocomplete="email" required>
+          <label for="rs-country">Destination *</label>
+          <select id="rs-country" name="destination_country" required><option value="">Select country</option><option value="FR">France</option><option value="DE">Germany</option><option value="GB">United Kingdom</option><option value="US">United States</option><option value="CA">Canada</option><option value="AU">Australia</option><option value="OTHER">Other</option></select>
+          <label for="rs-postal-code">Postal code *</label><input id="rs-postal-code" name="postal_code" autocomplete="postal-code" required>
+          <label for="rs-method">Preferred shipping</label>
+          <select id="rs-method" name="shipping_method"><option value="To Be Quoted">Recommend the best option</option><option value="International Express">International express</option><option value="Air Freight">Air freight</option><option value="Sea LCL">Sea freight LCL</option><option value="Sea Pallet">Consolidated pallet</option></select>
+          <label for="rs-notes">Additional requirements</label><textarea id="rs-notes" name="customer_notes" rows="3" placeholder="Delivery schedule, private label, packaging or other requirements"></textarea>
+          <button class="rs-submit" id="rs-submit" type="submit" disabled>Submit purchase intent</button>
+          <p class="rs-legal">Submitting this form does not create a binding order or payment obligation. Entrol will issue a separate quotation after verification.</p>
+        </form>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 Entrol (Weihai Yuanchuang Import &amp; Export Co., Ltd.). All rights reserved.</p></div></div></footer>
+  <script src="script.js"></script>
+  <script src="ready-stock.js"></script>
+</body>
+</html>
