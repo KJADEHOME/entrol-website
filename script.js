@@ -335,6 +335,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // Track contact intent consistently across hero, footer, sticky and floating WhatsApp links.
+  document.querySelectorAll('a[href*="wa.me/"]').forEach(function(link) {
+    link.addEventListener('click', function() {
+      var placement = link.classList.contains('whatsapp-float') ? 'floating_widget'
+        : link.closest('footer') ? 'footer'
+        : link.closest('.hero') ? 'hero'
+        : link.closest('.sticky-mobile-cta') ? 'mobile_sticky'
+        : 'page_content';
+      if (window.dataLayer) window.dataLayer.push({
+        event: 'whatsapp_click',
+        contact_method: 'whatsapp',
+        link_placement: placement,
+        page_path: window.location.pathname
+      });
+      if (typeof gtag === 'function') gtag('event', 'contact', {
+        method: 'whatsapp',
+        link_placement: placement,
+        page_path: window.location.pathname
+      });
+      if (typeof plausible === 'function') plausible('whatsapp_click', {
+        props: { placement: placement, page: window.location.pathname }
+      });
+    });
+  });
+
   document.querySelectorAll('[data-share-channel]').forEach(function(control) {
     control.addEventListener('click', function(event) {
       var channel = control.getAttribute('data-share-channel') || 'unknown';

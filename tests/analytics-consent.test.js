@@ -42,6 +42,21 @@ test('analytics code uses the configured GA4 property and keeps advertising deni
   assert.match(script, /ALLOWED_HOSTS/);
 });
 
+test('events before analytics opt-in are discarded rather than replayed later', () => {
+  const script = fs.readFileSync(path.join(root, 'analytics-consent.js'), 'utf8');
+  assert.match(script, /arguments\[0\] === 'event' && readChoice\(\) !== 'granted'/);
+  const defaultIndex = script.indexOf("window.gtag('consent', 'default'");
+  const loadIndex = script.indexOf('function loadAnalytics()');
+  assert.ok(defaultIndex > -1 && defaultIndex < loadIndex);
+});
+
+test('site script tracks WhatsApp contact intent with placement context', () => {
+  const script = fs.readFileSync(path.join(root, 'script.js'), 'utf8');
+  assert.match(script, /a\[href\*="wa\.me\/"\]/);
+  assert.match(script, /gtag\('event', 'contact'/);
+  assert.match(script, /link_placement/);
+});
+
 test('privacy policy discloses optional Google Analytics and preference controls', () => {
   const html = fs.readFileSync(path.join(root, 'privacy-policy.html'), 'utf8');
   assert.match(html, /Google Analytics 4/);

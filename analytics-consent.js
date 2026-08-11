@@ -6,11 +6,6 @@
   var ALLOWED_HOSTS = ['entrol.com', 'www.entrol.com'];
   var isLoaded = false;
 
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || function () {
-    window.dataLayer.push(arguments);
-  };
-
   function readChoice() {
     try {
       return window.localStorage.getItem(STORAGE_KEY);
@@ -18,6 +13,21 @@
       return null;
     }
   }
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () {
+    // Basic consent mode: events that happen before opt-in are discarded,
+    // rather than queued and replayed after a visitor later grants consent.
+    if (arguments[0] === 'event' && readChoice() !== 'granted') return;
+    window.dataLayer.push(arguments);
+  };
+
+  window.gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied'
+  });
 
   function saveChoice(choice) {
     try {
@@ -28,12 +38,6 @@
   }
 
   function setConsent(analyticsState) {
-    window.gtag('consent', 'default', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied'
-    });
     window.gtag('consent', 'update', {
       ad_storage: 'denied',
       ad_user_data: 'denied',
