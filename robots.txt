@@ -1,4 +1,15 @@
 User-agent: *
 Allow: /
 
+# AI search and user-requested retrieval. These agents are also covered by
+# the wildcard rule above; explicit entries make the site's policy clear.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
 Sitemap: https://www.entrol.com/sitemap.xml
