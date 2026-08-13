@@ -5,6 +5,26 @@ const ALLOWED_ORIGINS = new Set([
   "https://entrol.com",
 ]);
 
+// Disposable / tenant email domains that spammers abuse to fake a "business" address.
+const SUSPICIOUS_EMAIL_DOMAINS = new Set([
+  "onmicrosoft.com",
+  "mailinator.com", "tempmail.com", "guerrillamail.com", "10minutemail.com",
+  "yopmail.com", "trashmail.com", "getnada.com", "sharklasers.com", "throwawaymail.com",
+  "dispostable.com", "fakeinbox.com", "maildrop.cc", "temp-mail.org", "mailnesia.com",
+]);
+
+// Recognised destination markets / countries. Used to reject gibberish "target market" spam.
+const MARKET_KEYWORD_RE = /\b(us|usa|u\.s\.a?|uk|u\.k|eu|europe|european|eea|emea|united states|united kingdom|states|england|scotland|wales|britain|great britain|germany|german|france|french|spain|spanish|italy|italian|netherlands|holland|belgium|switzerland|austria|sweden|norway|denmark|finland|poland|portugal|ireland|greece|romania|czech|hungary|australia|australian|new zealand|nz|asia|japan|japanese|korea|korean|china|chinese|singapore|malaysia|thailand|vietnam|india|indonesia|philippines|canada|mexico|brazil|latin america|latam|south america|north america|middle east|uae|saudi|africa|south africa|oceania|global|worldwide|world|international|overseas)\b/i;
+
+function isPlausibleMarket(text: string | null): boolean {
+  if (!text) return false;
+  const normalized = text.trim();
+  if (normalized.length === 0) return false;
+  if (MARKET_KEYWORD_RE.test(normalized)) return true;
+  if (/\s/.test(normalized) && normalized.length <= 60) return true;
+  return false;
+}
+
 const MAX_BODY_BYTES = 24_000;
 const TEXT_LIMITS: Record<string, number> = {
   name: 160,
@@ -92,6 +112,7 @@ type ScorableLead = {
 function scoreLead(lead: ScorableLead) {
   let score = 0;
   const reasons: string[] = [];
+  const spamSignals: string[] = [];
   const add = (points: number, reason: string) => {
     score += points;
     reasons.push(`${reason} (+${points})`);
@@ -99,16 +120,31 @@ function scoreLead(lead: ScorableLead) {
 
   if (lead.company) add(15, "company provided");
   if (lead.product_interest) add(15, "product interest provided");
-  if (lead.target_market) add(10, "target market provided");
+  if (lead.target_market) {
+    if (isPlausibleMarket(lead.target_market)) {
+      add(10, "target market provided");
+    } else {
+      score -= 5;
+      reasons.push("target market not recognized (-5)");
+      spamSignals.push("target market not a recognized market (gibberish)");
+    }
+  }
   if (lead.contact) add(5, "direct contact provided");
   if (lead.utm_source) add(5, "attributed traffic source");
   if (lead.catalog_touch_page || lead.catalog_touch_placement) add(10, "catalog engagement");
 
   if (lead.quantity) {
-    add(15, "quantity provided");
     const quantityNumber = Number((lead.quantity.match(/[\d,.]+/)?.[0] || "").replace(/[,\s]/g, ""));
-    if (Number.isFinite(quantityNumber) && quantityNumber >= 500) add(10, "quantity at least 500");
-    else if (Number.isFinite(quantityNumber) && quantityNumber >= 100) add(5, "quantity at least 100");
+    const quantityValid = Number.isFinite(quantityNumber) && quantityNumber >= 1 && quantityNumber <= 10_000_000;
+    if (quantityValid) {
+      add(15, "quantity provided");
+      if (quantityNumber >= 500) add(10, "quantity at least 500");
+      else if (quantityNumber >= 100) add(5, "quantity at least 100");
+    } else {
+      score -= 5;
+      reasons.push("quantity is not a valid number (-5)");
+      spamSignals.push("quantity is not a valid number (gibberish)");
+    }
   }
 
   const messageLength = lead.message?.length || 0;
@@ -118,7 +154,8 @@ function scoreLead(lead: ScorableLead) {
   const commercialText = [lead.company, lead.product_interest, lead.quantity, lead.target_market, lead.message]
     .filter(Boolean)
     .join(" ");
-  if (/\b(wholesale|distributor|retailer|import(?:er)?|bulk|oem|odm|private[ -]?label|brand|store|shop|order|boutique|commande|grossiste|distributeur|importateur|marque|achat|quantit[eé]|catalogue)\b/i.test(commercialText)) {
+  const hasCommercialIntent = /\b(wholesale|distributor|retailer|import(?:er)?|bulk|oem|odm|private[ -]?label|brand|store|shop|order|boutique|commande|grossiste|distributeur|importateur|marque|achat|quantit[eé]|catalogue)\b/i.test(commercialText);
+  if (hasCommercialIntent) {
     add(10, "commercial buying intent");
   }
 
@@ -126,11 +163,19 @@ function scoreLead(lead: ScorableLead) {
   const freeEmailDomains = new Set([
     "gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "icloud.com", "qq.com", "163.com", "126.com",
   ]);
-  if (emailDomain && !freeEmailDomains.has(emailDomain)) add(10, "business email domain");
+  if (emailDomain && !freeEmailDomains.has(emailDomain)) {
+    if (SUSPICIOUS_EMAIL_DOMAINS.has(emailDomain)) {
+      spamSignals.push(`suspicious email domain: ${emailDomain}`);
+    } else {
+      add(10, "business email domain");
+    }
+  }
 
-  const cappedScore = Math.min(score, 100);
-  const priority = cappedScore >= 65 ? "HOT" : cappedScore >= 35 ? "WARM" : "COLD";
-  return { score: cappedScore, priority, reasons };
+  const isSpam = spamSignals.length >= 2 || (spamSignals.length === 1 && !hasCommercialIntent && !lead.message);
+  const cappedScore = Math.max(0, Math.min(score, 100));
+  let priority = cappedScore >= 65 ? "HOT" : cappedScore >= 35 ? "WARM" : "COLD";
+  if (isSpam) priority = "SPAM";
+  return { score: cappedScore, priority, reasons, isSpam, spamReasons: spamSignals };
 }
 
 function customerReplyContent(row: {
@@ -272,6 +317,8 @@ Deno.serve(async (req: Request) => {
     lead_score: leadScoring.score,
     lead_priority: leadScoring.priority,
     lead_score_reasons: leadScoring.reasons,
+    lead_is_spam: leadScoring.isSpam,
+    lead_spam_reasons: leadScoring.spamReasons,
     lead_scored_at: new Date().toISOString(),
   };
   const row = { ...normalizedLead, raw_payload: scoredPayload };
@@ -299,6 +346,7 @@ Deno.serve(async (req: Request) => {
       `Priority: ${leadScoring.priority}`,
       `Lead score: ${leadScoring.score}/100`,
       `Score reasons: ${leadScoring.reasons.join("; ") || "No qualifying signals"}`,
+      `Spam signals: ${leadScoring.isSpam ? leadScoring.spamReasons.join("; ") : "none"}`,
       `Type: ${row.submission_type}`,
       `Name: ${row.name || "-"}`,
       `Company: ${row.company || "-"}`,
@@ -350,7 +398,7 @@ Deno.serve(async (req: Request) => {
     await admin.from("entrol_leads").update({ notification_status: "not_configured" }).eq("id", data.id);
   }
 
-  if (resendApiKey && row.email) {
+  if (resendApiKey && row.email && !leadScoring.isSpam) {
     const replyContent = customerReplyContent(row);
     let customerReplyProviderId: string | null = null;
     let customerReplyError: string | null = null;
@@ -393,6 +441,7 @@ Deno.serve(async (req: Request) => {
     ok: true,
     lead_id: data.id,
     duplicate: false,
+    is_spam: leadScoring.isSpam,
     notification_status: notificationStatus,
     customer_reply_status: customerReplyStatus,
     lead_priority: leadScoring.priority,
