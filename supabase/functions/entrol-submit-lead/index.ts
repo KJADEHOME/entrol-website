@@ -8,6 +8,7 @@ const ALLOWED_ORIGINS = new Set([
 // Disposable / tenant email domains that spammers abuse to fake a "business" address.
 const SUSPICIOUS_EMAIL_DOMAINS = new Set([
   "onmicrosoft.com",
+  "razorvision.net",
   "mailinator.com", "tempmail.com", "guerrillamail.com", "10minutemail.com",
   "yopmail.com", "trashmail.com", "getnada.com", "sharklasers.com", "throwawaymail.com",
   "dispostable.com", "fakeinbox.com", "maildrop.cc", "temp-mail.org", "mailnesia.com",
@@ -22,6 +23,31 @@ function isPlausibleMarket(text: string | null): boolean {
   if (normalized.length === 0) return false;
   if (MARKET_KEYWORD_RE.test(normalized)) return true;
   if (/\s/.test(normalized) && normalized.length <= 60) return true;
+  return false;
+}
+
+// Detect random-letter gibberish used in spammer "name" / "company" fields
+// (e.g. "Nukbs LLC", "kGxbsrYoSMaGfKgk"). Conservative: a multi-word phrase is
+// only flagged on a very long consonant run so real names like "John Smith" survive.
+function isGibberishName(text: string | null): boolean {
+  if (!text) return false;
+  const t = text.trim();
+  if (t.length < 3 || t.length > 60) return false;
+  const hasSpace = /\s/.test(t);
+  const tokens = t.split(/\s+/).filter(Boolean);
+  for (const tok of tokens) {
+    const letters = tok.replace(/[^a-zA-Z]/g, "");
+    if (letters.length < 3) continue;
+    const vowels = (letters.match(/[aeiouAEIOU]/g) || []).length;
+    const ratio = vowels / letters.length;
+    const runs = letters.match(/[^aeiouAEIOU]+/g) || [];
+    const consMax = runs.reduce((m, s) => Math.max(m, s.length), 0);
+    if (hasSpace) {
+      if (consMax >= 5) return true;
+    } else if (consMax >= 4 && ratio <= 0.25 && letters.length >= 5) {
+      return true;
+    }
+  }
   return false;
 }
 
@@ -118,7 +144,24 @@ function scoreLead(lead: ScorableLead) {
     reasons.push(`${reason} (+${points})`);
   };
 
-  if (lead.company) add(15, "company provided");
+  if (lead.company) {
+    if (isGibberishName(lead.company)) {
+      score -= 5;
+      reasons.push("company name looks like gibberish (-5)");
+      spamSignals.push("company name is gibberish");
+    } else {
+      add(15, "company provided");
+    }
+  }
+  if (lead.name) {
+    if (isGibberishName(lead.name)) {
+      score -= 5;
+      reasons.push("name looks like gibberish (-5)");
+      spamSignals.push("name is gibberish");
+    } else {
+      add(10, "name provided");
+    }
+  }
   if (lead.product_interest) add(15, "product interest provided");
   if (lead.target_market) {
     if (isPlausibleMarket(lead.target_market)) {
@@ -150,6 +193,11 @@ function scoreLead(lead: ScorableLead) {
   const messageLength = lead.message?.length || 0;
   if (messageLength >= 80) add(10, "detailed message");
   if (messageLength >= 200) add(5, "high-detail message");
+  if (lead.message && /^\d{6,}$/.test(lead.message.trim())) {
+    score -= 5;
+    reasons.push("message is a numeric string, not text (-5)");
+    spamSignals.push("message is numeric only (gibberish)");
+  }
 
   const commercialText = [lead.company, lead.product_interest, lead.quantity, lead.target_market, lead.message]
     .filter(Boolean)
