@@ -89,7 +89,7 @@
           "target_keyword": "source dog toys from China",
           "pillar": "Product-Specific",
           "money_page_link": "dog-toys-oem",
-          "status": "pending",
+          "status": "completed",
           "outline": [
             "Why China dominates dog toy manufacturing",
             "Types of dog toys: plush, rubber, rope, interactive",
@@ -99,7 +99,8 @@
             "MOQ and pricing ranges by toy type",
             "Custom packaging and branding options",
             "How to evaluate dog toy factory samples"
-          ]
+          ],
+          "completed_date": "2026-08-15"
         },
         {
           "id": "BLOG-018",
