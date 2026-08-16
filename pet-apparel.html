@@ -53,20 +53,7 @@
       "name": "Pet Apparel & Knitwear",
       "description": "Premium pet apparel including dog sweaters, cat jackets, seasonal knitwear and private label clothing.",
       "brand": {"@id": "https://www.entrol.com/#organization"},
-      "manufacturer": {"@id": "https://www.entrol.com/#organization"},
-      "offers": {
-        "@type": "AggregateOffer",
-        "availability": "https://schema.org/InStock",
-        "priceCurrency": "USD",
-        "lowPrice": "3.00",
-        "highPrice": "25.00",
-        "offerCount": "50"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "127"
-      }
+      "manufacturer": {"@id": "https://www.entrol.com/#organization"}
     },
     {
       "@type": "WebPage",
@@ -83,6 +70,17 @@
         {"@type": "ListItem", "position": 2, "name": "Products", "item": "https://www.entrol.com/products.html"},
         {"@type": "ListItem", "position": 3, "name": "Pet Apparel", "item": "https://www.entrol.com/pet-apparel.html"}
       ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Can Entrol ship pet apparel to my 3PL warehouse?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. After the order details are confirmed, Entrol can arrange a consolidated export shipment to a buyer-nominated 3PL or fulfillment warehouse. Warehousing, fulfillment, freight, duties and destination charges are quoted separately."
+        }
+      }]
     }
   ]
 }
@@ -240,6 +238,14 @@
       <p style="color:var(--color-text-mid);margin-bottom:20px;font-size:0.95rem">Need custom colors, private label tags, or bespoke sizing? We're ready.</p>
         <a href="oem-pet-products-manufacturer.html" class="btn btn-primary bottom-cta-upgraded">Get OEM Quote &rarr;</a>
       </div>
+
+      <div class="reveal" style="max-width:900px;margin:48px auto 0;padding:32px;border:1px solid #e1e4e8;border-radius:12px;background:#fff;">
+        <p class="eyebrow" style="margin-bottom:10px;">3PL &amp; FULFILLMENT DELIVERY</p>
+        <h2 style="font-size:1.8rem;margin-bottom:14px;">Can Entrol ship pet apparel to my 3PL warehouse?</h2>
+        <p style="color:var(--color-text-mid);margin-bottom:14px;">Yes. After product references, quantities, labels, carton marks and destination requirements are confirmed, Entrol can arrange a consolidated export shipment to a buyer-nominated 3PL or fulfillment warehouse.</p>
+        <p style="color:var(--color-text-mid);margin-bottom:20px;"><strong>Important:</strong> this does not mean that warehousing or free storage is included. Storage, fulfillment, international freight, duties and destination charges are confirmed separately in the written quotation.</p>
+        <a href="contact.html?product=Pet%20Apparel%20to%203PL" class="btn btn-primary">Request a 3PL Delivery Quote &rarr;</a>
+      </div>
     </div>
   </section>
 
@@ -255,7 +261,7 @@
       <span>Get Quote</span>
     </a>
   </div>
-  <style>@media(max-width:768px){{.sticky-inquiry-bar{{display:flex !important;}}}}}</style>
+  <style>@media(max-width:768px){.sticky-inquiry-bar{display:flex !important;}}</style>
 
 
   <section class="related-insights" aria-labelledby="related-insights-title">

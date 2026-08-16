@@ -28,3 +28,18 @@ test('Ready Stock description stays within search snippet guidance', () => {
   const description = html.match(/<meta name="description" content="([^"]+)"/i)[1];
   assert.ok(description.length >= 100 && description.length <= 165);
 });
+
+test('category schema does not invent stock, prices, or customer reviews', () => {
+  for (const file of ['cat-tree.html', 'pet-apparel.html', 'pet-bedding.html']) {
+    const html = read(file);
+    assert.doesNotMatch(html, /schema\.org\/InStock/);
+    assert.doesNotMatch(html, /"(?:lowPrice|highPrice|offerCount|aggregateRating|reviewCount)"/);
+  }
+});
+
+test('pet apparel explains buyer-nominated 3PL delivery without promising warehousing', () => {
+  const html = read('pet-apparel.html');
+  assert.match(html, /buyer-nominated 3PL or fulfillment warehouse/i);
+  assert.match(html, /does not mean that warehousing or free storage is included/i);
+  assert.match(html, /storage, fulfillment, international freight, duties and destination charges are confirmed separately/i);
+});
