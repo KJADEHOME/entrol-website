@@ -18,8 +18,16 @@ test('auto reply does not promise unverified commercial terms', () => {
 });
 
 test('customer email is sent only when an email address and Resend configuration exist', () => {
-  assert.match(source, /if \(resendApiKey && row\.email\)/);
+  assert.match(source, /if \(!isQuarantined && resendApiKey && row\.email\)/);
   assert.match(source, /row\.email \? "not_configured" : "not_applicable"/);
+});
+
+test('quarantined submissions do not trigger internal or customer email', () => {
+  assert.match(source, /const isQuarantined = leadScoring\.isSpam \|\| abuseAssessment\.quarantined/);
+  assert.match(source, /if \(isQuarantined\)/);
+  assert.match(source, /notificationStatus = "quarantined"/);
+  assert.match(source, /customerReplyStatus = row\.email \? "quarantined" : "not_applicable"/);
+  assert.match(source, /else if \(resendApiKey\)/);
 });
 
 test('customer reply delivery evidence is stored separately from internal notification status', () => {

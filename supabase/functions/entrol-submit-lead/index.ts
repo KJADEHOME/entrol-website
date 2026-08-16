@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { assessLeadAbuse } from "./anti-spam.mjs";
 
 const ALLOWED_ORIGINS = new Set([
   "https://www.entrol.com",
@@ -359,7 +360,21 @@ Deno.serve(async (req: Request) => {
     inquiry_trigger: clean(payload.inquiry_trigger, TEXT_LIMITS.inquiry_trigger),
     user_agent: clean(req.headers.get("user-agent"), 1000),
   };
+  let recentDuplicateEmail = false;
+  if (email) {
+    const recentCutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { data: recentEmailRows, error: recentEmailError } = await admin
+      .from("entrol_leads")
+      .select("id")
+      .eq("email", email)
+      .gte("created_at", recentCutoff)
+      .limit(1);
+    if (recentEmailError) console.error("recent_email_check_failed", recentEmailError.code, recentEmailError.message);
+    recentDuplicateEmail = Boolean(recentEmailRows?.length);
+  }
+  const abuseAssessment = assessLeadAbuse(normalizedLead, { recentDuplicateEmail });
   const leadScoring = scoreLead(normalizedLead);
+  const isQuarantined = leadScoring.isSpam || abuseAssessment.quarantined;
   const scoredPayload = {
     ...safePayload,
     lead_score: leadScoring.score,
@@ -368,6 +383,10 @@ Deno.serve(async (req: Request) => {
     lead_is_spam: leadScoring.isSpam,
     lead_spam_reasons: leadScoring.spamReasons,
     lead_scored_at: new Date().toISOString(),
+    abuse_status: isQuarantined ? "QUARANTINE" : "PASS",
+    abuse_risk_score: abuseAssessment.riskScore,
+    abuse_reasons: abuseAssessment.reasons,
+    abuse_checked_at: new Date().toISOString(),
   };
   const row = { ...normalizedLead, raw_payload: scoredPayload };
 
@@ -385,7 +404,11 @@ Deno.serve(async (req: Request) => {
   let notificationStatus = "not_configured";
   let customerReplyStatus = row.email ? "not_configured" : "not_applicable";
 
-  if (resendApiKey) {
+  if (isQuarantined) {
+    notificationStatus = "quarantined";
+    customerReplyStatus = row.email ? "quarantined" : "not_applicable";
+    await admin.from("entrol_leads").update({ notification_status: "quarantined" }).eq("id", data.id);
+  } else if (resendApiKey) {
     const subjectName = row.company || row.name || row.email || row.contact || "New lead";
     const notificationText = [
       "A new Entrol website lead was stored successfully.",
@@ -446,7 +469,7 @@ Deno.serve(async (req: Request) => {
     await admin.from("entrol_leads").update({ notification_status: "not_configured" }).eq("id", data.id);
   }
 
-  if (resendApiKey && row.email && !leadScoring.isSpam) {
+  if (!isQuarantined && resendApiKey && row.email) {
     const replyContent = customerReplyContent(row);
     let customerReplyProviderId: string | null = null;
     let customerReplyError: string | null = null;
@@ -489,7 +512,7 @@ Deno.serve(async (req: Request) => {
     ok: true,
     lead_id: data.id,
     duplicate: false,
-    is_spam: leadScoring.isSpam,
+    is_spam: isQuarantined,
     notification_status: notificationStatus,
     customer_reply_status: customerReplyStatus,
     lead_priority: leadScoring.priority,
