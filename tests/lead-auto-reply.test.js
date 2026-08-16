@@ -25,8 +25,9 @@ test('customer email is sent only when an email address and Resend configuration
 test('quarantined submissions do not trigger internal or customer email', () => {
   assert.match(source, /const isQuarantined = leadScoring\.isSpam \|\| abuseAssessment\.quarantined/);
   assert.match(source, /if \(isQuarantined\)/);
-  assert.match(source, /notificationStatus = "quarantined"/);
-  assert.match(source, /customerReplyStatus = row\.email \? "quarantined" : "not_applicable"/);
+  assert.match(source, /notificationStatus = "not_configured"/);
+  assert.match(source, /customerReplyStatus = "not_applicable"/);
+  assert.match(source, /customer_auto_reply_status: "suppressed_spam"/);
   assert.match(source, /else if \(resendApiKey\)/);
 });
 

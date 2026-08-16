@@ -387,6 +387,7 @@ Deno.serve(async (req: Request) => {
     abuse_risk_score: abuseAssessment.riskScore,
     abuse_reasons: abuseAssessment.reasons,
     abuse_checked_at: new Date().toISOString(),
+    ...(isQuarantined ? { customer_auto_reply_status: "suppressed_spam" } : {}),
   };
   const row = { ...normalizedLead, raw_payload: scoredPayload };
 
@@ -405,9 +406,13 @@ Deno.serve(async (req: Request) => {
   let customerReplyStatus = row.email ? "not_configured" : "not_applicable";
 
   if (isQuarantined) {
-    notificationStatus = "quarantined";
-    customerReplyStatus = row.email ? "quarantined" : "not_applicable";
-    await admin.from("entrol_leads").update({ notification_status: "quarantined" }).eq("id", data.id);
+    notificationStatus = "not_configured";
+    customerReplyStatus = "not_applicable";
+    const { error: quarantineStatusError } = await admin
+      .from("entrol_leads")
+      .update({ notification_status: "not_configured" })
+      .eq("id", data.id);
+    if (quarantineStatusError) console.error("quarantine_status_update_failed", quarantineStatusError.code, quarantineStatusError.message);
   } else if (resendApiKey) {
     const subjectName = row.company || row.name || row.email || row.contact || "New lead";
     const notificationText = [
