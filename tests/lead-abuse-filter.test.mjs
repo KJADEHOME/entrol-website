@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { assessLeadAbuse } from "../supabase/functions/entrol-submit-lead/anti-spam.mjs";
+import fs from "node:fs";
+
+test("homepage catalog quote form includes the server-side honeypot and requires a contact name", () => {
+  const html = fs.readFileSync("index.html", "utf8");
+  assert.match(html, /name="website"[^>]*tabindex="-1"[^>]*autocomplete="off"/);
+  assert.match(html, /name="name"[^>]*autocomplete="name"[^>]*required/);
+});
 
 test("quarantines the observed random LLC, gibberish quantity and numeric message pattern", () => {
   const result = assessLeadAbuse({
@@ -29,6 +36,39 @@ test("quarantines repeated near-empty random company submissions", () => {
     message: null,
   }, { recentDuplicateEmail: true });
   assert.equal(result.quarantined, true);
+});
+
+test("quarantines the newly observed unnamed sparse catalog LLC submission", () => {
+  const result = assessLeadAbuse({
+    submission_type: "catalog",
+    name: null,
+    email: "jos.hna.m@gmail.com",
+    contact: null,
+    company: "Aalyhuruj LLC",
+    product_interest: "Cat Trees",
+    quantity: null,
+    target_market: null,
+    message: null,
+  });
+  assert.equal(result.quarantined, true);
+  assert.equal(result.riskScore, 4);
+  assert.match(result.reasons.join("; "), /observed random LLC campaign/);
+});
+
+test("does not quarantine a named catalog buyer solely for using an LLC company name", () => {
+  const result = assessLeadAbuse({
+    submission_type: "catalog",
+    name: "Anna Lee",
+    email: "anna@example.com",
+    contact: null,
+    company: "Amazon LLC",
+    product_interest: "Cat Trees",
+    quantity: null,
+    target_market: null,
+    message: null,
+  });
+  assert.equal(result.quarantined, false);
+  assert.equal(result.riskScore, 2);
 });
 
 test("does not penalize a detailed Gmail buyer inquiry", () => {

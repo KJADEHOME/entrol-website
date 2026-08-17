@@ -26,12 +26,18 @@ export function assessLeadAbuse(lead, options = {}) {
     add(2, "message is compact mixed-case gibberish");
   }
 
-  if (lead.company && /^[A-Za-z]{5,12} LLC$/.test(lead.company)) {
+  const randomSingleWordLlc = Boolean(lead.company && /^[A-Za-z]{5,12} LLC$/.test(lead.company));
+  if (randomSingleWordLlc) {
     add(1, "company matches repeated random LLC pattern");
   }
 
-  if (!lead.message && !lead.quantity && !lead.target_market && !lead.contact) {
+  const hasAlmostNoQualification = !lead.message && !lead.quantity && !lead.target_market && !lead.contact;
+  if (hasAlmostNoQualification) {
     add(1, "submission has almost no qualification detail");
+  }
+
+  if (randomSingleWordLlc && hasAlmostNoQualification && !lead.name) {
+    add(2, "unnamed sparse submission matches observed random LLC campaign");
   }
 
   return {
