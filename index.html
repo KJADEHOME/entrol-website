@@ -479,9 +479,14 @@
           <input type="hidden" name="_template" value="table">
           <input type="hidden" name="_next" value="https://www.entrol.com/?catalog=sent">
           <input type="hidden" name="catalog_request" value="Request pricing and MOQ for the 2026 pet products catalog">
+          <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
+            <label for="catalog-website">Leave this field empty</label>
+            <input type="text" name="website" id="catalog-website" tabindex="-1" autocomplete="off">
+          </div>
           <label class="catalog-label" for="catalog-email">Request Pricing &amp; MOQ</label>
           <div class="catalog-input-row">
             <input type="email" name="email" id="catalog-email" class="catalog-email-input" placeholder="business@yourcompany.com" required>
+            <input type="text" name="name" class="catalog-email-input" placeholder="Contact name" autocomplete="name" required style="flex:0 0 40%;margin-top:8px;">
             <input type="text" name="company" class="catalog-email-input" placeholder="Company (optional)" style="flex:0 0 40%;margin-top:8px;">
             <select name="product_type" class="catalog-email-input" style="flex:0 0 40%;margin-top:8px;">
               <option value="">Product interest (optional)</option>
