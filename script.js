@@ -66,14 +66,6 @@ if (inquiryForm) {
     inquiryForm.style.display = 'none';
   }
 
-  // Detect Formsubmit.co: let native POST handle it
-  const action = inquiryForm.getAttribute('action') || '';
-  const useFormsubmit = action.includes('formsubmit.co');
-
-  if (useFormsubmit) {
-    // Native POST → Formsubmit handles redirect back to ?sent=1
-  }
-
   // Fallback: mailto (local preview / before formsubmit is set up)
   inquiryForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -186,16 +178,7 @@ function submitInquiry(e) {
   var form = e && e.currentTarget ? e.currentTarget : document.getElementById('inquiryForm');
   if (!form) return false;
 
-  // All legacy quick-inquiry forms use the same reliable delivery endpoint.
-  // Do not show a success state until FormSubmit has actually accepted the POST.
-  form.action = 'https://formsubmit.co/wangyan@entrol.com';
-  form.method = 'POST';
-
   var hiddenFields = {
-    _subject: '[Entrol] New Quick Inquiry',
-    _captcha: 'false',
-    _template: 'table',
-    _next: 'https://www.entrol.com/contact.html?sent=1',
     source_page: window.location.href,
     landing_page: sessionStorage.getItem('entrol_landing_page') || window.location.href,
     referrer: document.referrer || 'direct'
@@ -275,8 +258,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (event.key === 'Escape' && inquirySidebar && inquirySidebar.classList.contains('open')) toggleInquiry();
   });
 
-  // Enrich every native FormSubmit form with attribution before it leaves the page.
-  document.querySelectorAll('form[action*="formsubmit.co"]').forEach(function(form) {
+  // Enrich every Entrol lead form with attribution before it is sent to Supabase.
+  document.querySelectorAll('form[data-entrol-lead="true"]').forEach(function(form) {
     form.addEventListener('submit', function() {
       var attribution = {
         source_page: window.location.href,
@@ -521,7 +504,7 @@ async function entrolSubmitLead(form) {
 document.addEventListener('submit', function(event) {
   var form = event.target;
   if (!(form instanceof HTMLFormElement)) return;
-  var isInquiry = (form.action || '').includes('formsubmit.co') || (form.getAttribute('onsubmit') || '').includes('submitInquiry');
+  var isInquiry = form.matches('[data-entrol-lead="true"]') || (form.getAttribute('onsubmit') || '').includes('submitInquiry');
   if (!isInquiry || ENTROL_LEAD_API_URL.startsWith('__')) return;
   event.preventDefault();
   event.stopImmediatePropagation();

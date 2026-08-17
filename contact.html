@@ -164,7 +164,7 @@
             </div>
           </div>
           <div class="inquiry-info-item">
-            <div class="inquiry-info-icon">鉁堬笍</div>
+            <div class="inquiry-info-icon" aria-hidden="true">&#9992;</div>
             <div>
               <h4>Shipping Terms</h4>
               <p>FOB, CIF, DDP, EXW &mdash;your choice</p>
@@ -192,8 +192,8 @@
           <div class="form-card">
             <h3 style="font-family:var(--font-display);font-size:1.5rem;font-weight:500;margin-bottom:6px">Contact Our OEM Pet Products Factory</h3>
             <p style="font-size:0.85rem;color:var(--color-text-mid);margin-bottom:16px">As a trusted <strong>OEM pet products manufacturer</strong> and <strong>pet products factory China</strong>-based since 2005, we&rsquo;re ready to discuss your project. <a href="products.html">Browse our catalog</a> or <a href="index.html">return to homepage</a>.</p>
-            <form id="contactInquiryForm" action="https://formsubmit.co/wangyan@entrol.com" method="POST">
-              <!-- Formsubmit.co hidden fields -->
+            <form id="contactInquiryForm" data-entrol-lead="true" method="POST">
+              <!-- Legacy delivery metadata retained for field compatibility -->
               <input type="hidden" name="_subject" value="[Entrol] New Product Inquiry">
               <input type="hidden" name="_captcha" value="false">
               <input type="hidden" name="_template" value="table">
@@ -286,8 +286,8 @@
   <div class="inquiry-sidebar" id="inquirySidebar">
     <button class="inquiry-close" onclick="toggleInquiry()" aria-label="Close">&times;</button>
     <h3>Quick Inquiry</h3>
-    <form id="sidebarInquiryForm" action="https://formsubmit.co/wangyan@entrol.com" method="POST">
-              <!-- Formsubmit.co hidden fields -->
+    <form id="sidebarInquiryForm" data-entrol-lead="true" method="POST">
+              <!-- Legacy delivery metadata retained for field compatibility -->
               <input type="hidden" name="_subject" value="[Entrol] New Product Inquiry">
               <input type="hidden" name="_captcha" value="false">
               <input type="hidden" name="_template" value="table">

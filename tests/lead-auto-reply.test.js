@@ -36,3 +36,11 @@ test('customer reply delivery evidence is stored separately from internal notifi
   assert.match(source, /customer_auto_reply_provider_id/);
   assert.match(source, /customer_reply_status: customerReplyStatus/);
 });
+
+test('tracked website forms no longer expose the legacy FormSubmit endpoint', () => {
+  const files = fs.readdirSync('.').filter((name) => name.endsWith('.html'));
+  for (const file of files) {
+    assert.doesNotMatch(fs.readFileSync(file, 'utf8'), /formsubmit\.co/i, file);
+  }
+  assert.doesNotMatch(fs.readFileSync('script.js', 'utf8'), /formsubmit\.co/i);
+});
