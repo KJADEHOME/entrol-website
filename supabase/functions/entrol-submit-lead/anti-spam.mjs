@@ -13,6 +13,10 @@ export function assessLeadAbuse(lead, options = {}) {
 
   if (options.recentDuplicateEmail) add(2, "same email submitted recently");
 
+  if (!lead.email && lead.contact && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.contact)) {
+    add(2, "email address was placed in contact while email field was left empty");
+  }
+
   if (lead.quantity && isCompactGibberish(lead.quantity)) {
     add(2, "quantity is compact mixed-case gibberish");
   }

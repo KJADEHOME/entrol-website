@@ -55,6 +55,40 @@ test("quarantines the newly observed unnamed sparse catalog LLC submission", () 
   assert.match(result.reasons.join("; "), /observed random LLC campaign/);
 });
 
+test("quarantines an email hidden in contact combined with a numeric-only message", () => {
+  const result = assessLeadAbuse({
+    submission_type: "inquiry",
+    name: "Ilqb Adtstoawu",
+    email: null,
+    contact: "rym_21@hotmail.co.uk",
+    company: null,
+    product_interest: "Cat Tree",
+    quantity: null,
+    target_market: null,
+    message: "2483384716",
+  });
+  assert.equal(result.quarantined, true);
+  assert.equal(result.riskScore, 4);
+  assert.match(result.reasons.join("; "), /email address was placed in contact/);
+  assert.match(result.reasons.join("; "), /phone-like number/);
+});
+
+test("does not quarantine a buyer solely for placing an email address in contact", () => {
+  const result = assessLeadAbuse({
+    submission_type: "inquiry",
+    name: "Marie Laurent",
+    email: null,
+    contact: "marie@example.com",
+    company: "Maison du Chat",
+    product_interest: "Cat Trees",
+    quantity: "300 pcs",
+    target_market: "France",
+    message: "Please quote three cat tree models with private label packaging and consolidated delivery to Lyon.",
+  });
+  assert.equal(result.quarantined, false);
+  assert.equal(result.riskScore, 2);
+});
+
 test("does not quarantine a named catalog buyer solely for using an LLC company name", () => {
   const result = assessLeadAbuse({
     submission_type: "catalog",
