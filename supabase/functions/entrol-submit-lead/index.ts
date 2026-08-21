@@ -1,10 +1,49 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { assessLeadAbuse } from "./anti-spam.mjs";
 
-const ALLOWED_ORIGINS = new Set([
-  "https://www.entrol.com",
-  "https://entrol.com",
-]);
+type BusinessUnit = "pet_products" | "socks";
+
+type SiteConfig = {
+  businessUnit: BusinessUnit;
+  sourceSite: "www.entrol.com" | "entrol.com" | "socks.entrol.com";
+  notificationLabel: "Entrol Pet Lead" | "Entrol Socks Lead";
+  notificationIntro: string;
+  notificationToEnv: "ENTROL_NOTIFICATION_TO" | "ENTROL_SOCKS_NOTIFICATION_TO";
+  notificationFromEnv: "ENTROL_NOTIFICATION_FROM" | "ENTROL_SOCKS_NOTIFICATION_FROM";
+  customerReplyFromEnv: "ENTROL_CUSTOMER_REPLY_FROM" | "ENTROL_SOCKS_CUSTOMER_REPLY_FROM";
+};
+
+// The browser cannot choose its business unit. The request Origin is matched
+// against this server-owned map before any payload field is read or stored.
+const SITE_BY_ORIGIN: Readonly<Record<string, SiteConfig>> = Object.freeze({
+  "https://www.entrol.com": {
+    businessUnit: "pet_products",
+    sourceSite: "www.entrol.com",
+    notificationLabel: "Entrol Pet Lead",
+    notificationIntro: "A new Entrol pet-products website lead was stored successfully.",
+    notificationToEnv: "ENTROL_NOTIFICATION_TO",
+    notificationFromEnv: "ENTROL_NOTIFICATION_FROM",
+    customerReplyFromEnv: "ENTROL_CUSTOMER_REPLY_FROM",
+  },
+  "https://entrol.com": {
+    businessUnit: "pet_products",
+    sourceSite: "entrol.com",
+    notificationLabel: "Entrol Pet Lead",
+    notificationIntro: "A new Entrol pet-products website lead was stored successfully.",
+    notificationToEnv: "ENTROL_NOTIFICATION_TO",
+    notificationFromEnv: "ENTROL_NOTIFICATION_FROM",
+    customerReplyFromEnv: "ENTROL_CUSTOMER_REPLY_FROM",
+  },
+  "https://socks.entrol.com": {
+    businessUnit: "socks",
+    sourceSite: "socks.entrol.com",
+    notificationLabel: "Entrol Socks Lead",
+    notificationIntro: "A new Entrol socks website lead was stored successfully.",
+    notificationToEnv: "ENTROL_SOCKS_NOTIFICATION_TO",
+    notificationFromEnv: "ENTROL_SOCKS_NOTIFICATION_FROM",
+    customerReplyFromEnv: "ENTROL_SOCKS_CUSTOMER_REPLY_FROM",
+  },
+});
 
 // Disposable / tenant email domains that spammers abuse to fake a "business" address.
 const SUSPICIOUS_EMAIL_DOMAINS = new Set([
@@ -76,14 +115,19 @@ const TEXT_LIMITS: Record<string, number> = {
   inquiry_trigger: 500,
 };
 
-function corsHeaders(origin: string | null) {
-  return {
-    "Access-Control-Allow-Origin": origin && ALLOWED_ORIGINS.has(origin) ? origin : "https://www.entrol.com",
-    "Access-Control-Allow-Headers": "content-type, x-request-id",
+function siteForOrigin(origin: string | null): SiteConfig | null {
+  return origin ? SITE_BY_ORIGIN[origin] || null : null;
+}
+
+function corsHeaders(origin: string | null): Record<string, string> {
+  const headers: Record<string, string> = {
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-request-id, x-retry-count, traceparent, tracestate, baggage",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
   };
+  if (siteForOrigin(origin)) headers["Access-Control-Allow-Origin"] = origin as string;
+  return headers;
 }
 
 function jsonResponse(origin: string | null, body: unknown, status: number) {
@@ -124,6 +168,7 @@ function escapeHtml(value: string): string {
 }
 
 type ScorableLead = {
+  name: string | null;
   email: string | null;
   contact: string | null;
   company: string | null;
@@ -227,12 +272,14 @@ function scoreLead(lead: ScorableLead) {
   return { score: cappedScore, priority, reasons, isSpam, spamReasons: spamSignals };
 }
 
-function customerReplyContent(row: {
+type ReplyLead = {
   name: string | null;
   company: string | null;
   submission_type: string;
   product_interest: string | null;
-}) {
+};
+
+function petCustomerReplyContent(row: ReplyLead) {
   const greetingName = row.name || row.company;
   const greeting = greetingName ? `Hello ${greetingName},` : "Hello,";
   const requestSummary = row.product_interest
@@ -285,15 +332,77 @@ function customerReplyContent(row: {
   return { subject, text, html };
 }
 
+function senderWithDisplayName(sender: string, displayName: string): string {
+  const bracketedEmail = sender.match(/<([^<>\s]+@[^<>\s]+)>/)?.[1];
+  const bareEmail = sender.match(/^[^<>\s]+@[^<>\s]+$/)?.[0];
+  const email = bracketedEmail || bareEmail;
+  return email ? `${displayName} <${email}>` : sender;
+}
+
+function socksCustomerReplyContent(row: ReplyLead) {
+  const greetingName = row.name || row.company;
+  const greeting = greetingName ? `Hello ${greetingName},` : "Hello,";
+  const requestSummary = row.product_interest
+    ? `We have recorded your interest in: ${row.product_interest}.`
+    : "We have recorded your sock sourcing request.";
+  const subject = row.submission_type === "catalog"
+    ? "Your Entrol Socks OEM/ODM request and next steps"
+    : "We received your Entrol Socks inquiry";
+  const siteUrl = "https://socks.entrol.com/";
+  const contactUrl = "https://socks.entrol.com/contact.html";
+  const text = [
+    greeting,
+    "",
+    "Thank you for contacting Entrol Socks. Your inquiry has been received successfully, and our sock sourcing team will review it and reply within one business day.",
+    requestSummary,
+    "",
+    "To prepare an accurate quotation, please reply with the sock type, material composition, size range, estimated quantity, logo or pattern requirements, packaging requirements, destination country and postal code, and required delivery date.",
+    "",
+    "OEM and ODM options depend on the selected construction, yarn, artwork, quantity and packaging. We will confirm the applicable MOQ, unit pricing, sample terms, production lead time and shipping options in a written quotation.",
+    "",
+    "No price, MOQ, sample charge, production date or freight cost is confirmed until our sock sourcing team sends a written quotation.",
+    "",
+    `Socks website: ${siteUrl}`,
+    `Contact page: ${contactUrl}`,
+    "Email: wangyan@entrol.com",
+    "",
+    "Best regards,",
+    "Entrol Socks Team",
+    "Weihai Yuanchuang Import & Export Co., Ltd.",
+  ].join("\n");
+  const html = `<!doctype html>
+<html lang="en"><body style="margin:0;background:#f4f7f9;font-family:Arial,sans-serif;color:#1f2d38">
+<div style="max-width:640px;margin:0 auto;padding:28px 18px">
+  <div style="background:#ffffff;border:1px solid #dde6ec;border-radius:14px;padding:30px">
+    <p style="margin:0 0 18px;font-size:16px">${escapeHtml(greeting)}</p>
+    <h1 style="margin:0 0 16px;color:#17324d;font-size:24px">Thank you for contacting Entrol Socks</h1>
+    <p style="margin:0 0 14px;line-height:1.65">Your inquiry has been received successfully. Our sock sourcing team will review it and reply within one business day.</p>
+    <p style="margin:0 0 20px;line-height:1.65">${escapeHtml(requestSummary)}</p>
+    <p style="margin:0 0 14px;line-height:1.65">To prepare an accurate quotation, please reply with the sock type, material composition, size range, estimated quantity, logo or pattern requirements, packaging requirements, destination country and postal code, and required delivery date.</p>
+    <p style="margin:0 0 14px;line-height:1.65">OEM and ODM options depend on the selected construction, yarn, artwork, quantity and packaging. We will confirm the applicable MOQ, unit pricing, sample terms, production lead time and shipping options in a written quotation.</p>
+    <p style="margin:18px 0;padding:12px 14px;border-left:4px solid #d69b2d;background:#fff8e8;line-height:1.55"><strong>Quotation notice:</strong> No price, MOQ, sample charge, production date or freight cost is confirmed until our sock sourcing team sends a written quotation.</p>
+    <p style="margin:20px 0 0;line-height:1.65"><a href="${siteUrl}">Entrol Socks website</a><br>Email: <a href="mailto:wangyan@entrol.com">wangyan@entrol.com</a><br><a href="${contactUrl}">Contact Entrol Socks</a></p>
+    <p style="margin:24px 0 0;line-height:1.55">Best regards,<br><strong>Entrol Socks Team</strong><br>Weihai Yuanchuang Import &amp; Export Co., Ltd.</p>
+  </div>
+</div>
+</body></html>`;
+  return { subject, text, html };
+}
+
+function customerReplyContent(site: SiteConfig, row: ReplyLead) {
+  return site.businessUnit === "socks" ? socksCustomerReplyContent(row) : petCustomerReplyContent(row);
+}
+
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("origin");
+  const site = siteForOrigin(origin);
 
   if (req.method === "OPTIONS") {
-    if (!origin || !ALLOWED_ORIGINS.has(origin)) return jsonResponse(origin, { ok: false, error: "origin_not_allowed" }, 403);
+    if (!site) return jsonResponse(origin, { ok: false, error: "origin_not_allowed" }, 403);
     return new Response(null, { status: 204, headers: corsHeaders(origin) });
   }
   if (req.method !== "POST") return jsonResponse(origin, { ok: false, error: "method_not_allowed" }, 405);
-  if (!origin || !ALLOWED_ORIGINS.has(origin)) return jsonResponse(origin, { ok: false, error: "origin_not_allowed" }, 403);
+  if (!site) return jsonResponse(origin, { ok: false, error: "origin_not_allowed" }, 403);
 
   const declaredLength = Number(req.headers.get("content-length") || "0");
   if (declaredLength > MAX_BODY_BYTES) return jsonResponse(origin, { ok: false, error: "payload_too_large" }, 413);
@@ -337,6 +446,8 @@ Deno.serve(async (req: Request) => {
   const admin = createClient(supabaseUrl, secretKey, { auth: { persistSession: false, autoRefreshToken: false } });
   const normalizedLead = {
     request_id: requestIdText,
+    business_unit: site.businessUnit,
+    source_site: site.sourceSite,
     submission_type: submissionType,
     name: first(payload, ["name", "first-name", "first_name"], TEXT_LIMITS.name),
     email,
@@ -367,6 +478,7 @@ Deno.serve(async (req: Request) => {
       .from("entrol_leads")
       .select("id")
       .eq("email", email)
+      .eq("business_unit", site.businessUnit)
       .gte("created_at", recentCutoff)
       .limit(1);
     if (recentEmailError) console.error("recent_email_check_failed", recentEmailError.code, recentEmailError.message);
@@ -377,6 +489,9 @@ Deno.serve(async (req: Request) => {
   const isQuarantined = leadScoring.isSpam || abuseAssessment.quarantined;
   const scoredPayload = {
     ...safePayload,
+    business_unit: site.businessUnit,
+    source_site: site.sourceSite,
+    origin,
     lead_score: leadScoring.score,
     lead_priority: leadScoring.priority,
     lead_score_reasons: leadScoring.reasons,
@@ -399,9 +514,13 @@ Deno.serve(async (req: Request) => {
   }
 
   const resendApiKey = Deno.env.get("RESEND_API_KEY");
-  const notificationTo = Deno.env.get("ENTROL_NOTIFICATION_TO") || "wangyan@entrol.com";
-  const notificationFrom = Deno.env.get("ENTROL_NOTIFICATION_FROM") || "Entrol Leads <leads@updates.entrol.com>";
-  const customerReplyFrom = Deno.env.get("ENTROL_CUSTOMER_REPLY_FROM") || notificationFrom;
+  const defaultNotificationTo = Deno.env.get("ENTROL_NOTIFICATION_TO") || "wangyan@entrol.com";
+  const defaultNotificationFrom = Deno.env.get("ENTROL_NOTIFICATION_FROM") || "Entrol Leads <leads@updates.entrol.com>";
+  const notificationTo = Deno.env.get(site.notificationToEnv) || defaultNotificationTo;
+  const notificationFrom = Deno.env.get(site.notificationFromEnv)
+    || (site.businessUnit === "socks" ? senderWithDisplayName(defaultNotificationFrom, "Entrol Socks Leads") : defaultNotificationFrom);
+  const customerReplyFrom = Deno.env.get(site.customerReplyFromEnv)
+    || (site.businessUnit === "socks" ? senderWithDisplayName(notificationFrom, "Entrol Socks Team") : notificationFrom);
   let notificationStatus = "not_configured";
   let customerReplyStatus = row.email ? "not_configured" : "not_applicable";
 
@@ -416,9 +535,11 @@ Deno.serve(async (req: Request) => {
   } else if (resendApiKey) {
     const subjectName = row.company || row.name || row.email || row.contact || "New lead";
     const notificationText = [
-      "A new Entrol website lead was stored successfully.",
+      site.notificationIntro,
       "",
       `Lead ID: ${data.id}`,
+      `Business unit: ${site.businessUnit}`,
+      `Source site: ${site.sourceSite}`,
       `Priority: ${leadScoring.priority}`,
       `Lead score: ${leadScoring.score}/100`,
       `Score reasons: ${leadScoring.reasons.join("; ") || "No qualifying signals"}`,
@@ -448,7 +569,7 @@ Deno.serve(async (req: Request) => {
           from: notificationFrom,
           to: [notificationTo],
           reply_to: row.email || undefined,
-          subject: `[${leadScoring.priority} ${leadScoring.score}] [Entrol Lead] ${subjectName}`.slice(0, 200),
+          subject: `[${leadScoring.priority} ${leadScoring.score}] [${site.notificationLabel}] ${subjectName}`.slice(0, 200),
           text: notificationText,
         }),
       });
@@ -475,7 +596,7 @@ Deno.serve(async (req: Request) => {
   }
 
   if (!isQuarantined && resendApiKey && row.email) {
-    const replyContent = customerReplyContent(row);
+    const replyContent = customerReplyContent(site, row);
     let customerReplyProviderId: string | null = null;
     let customerReplyError: string | null = null;
     const customerReplyAttemptedAt = new Date().toISOString();
@@ -522,5 +643,6 @@ Deno.serve(async (req: Request) => {
     customer_reply_status: customerReplyStatus,
     lead_priority: leadScoring.priority,
     lead_score: leadScoring.score,
+    business_unit: site.businessUnit,
   }, 201);
 });
