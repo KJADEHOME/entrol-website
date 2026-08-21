@@ -13,6 +13,8 @@ test('homepage metadata leads with the Entrol brand', () => {
   assert.ok(description.length >= 100 && description.length <= 165);
   assert.match(html, /instagram\.com\/wangyan_entrol/);
   assert.match(html, /tiktok\.com\/@yanwang837/);
+  assert.doesNotMatch(html, />Bestsellers</i);
+  assert.match(html, /Featured Categories/);
 });
 
 test('custom 404 remains non-indexable and offers current recovery links', () => {
