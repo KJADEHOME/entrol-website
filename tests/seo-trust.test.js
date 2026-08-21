@@ -79,3 +79,13 @@ test('dog toys is a visible B2B category without fixed commercial promises', () 
   assert.match(products, /href="dog-toys-oem\.html">Dog Toys<\/a>/);
   assert.match(home, /href="dog-toys-oem\.html">Dog Toys<\/a>/);
 });
+
+test('new sourcing categories are linked and keep commercial terms product-specific', () => {
+  const products = read('products.html');
+  for (const file of ['pet-feeding.html', 'pet-grooming.html', 'pet-travel.html']) {
+    const html = read(file);
+    assert.match(html, /Request .* Quote|Request .*Quote/i);
+    assert.match(html, /confirmed by SKU|confirmed for each selected product|confirmed by selected design/i);
+    assert.match(products, new RegExp(`href="${file.replace('.', '\\.')}"`));
+  }
+});
