@@ -40,6 +40,19 @@ test('category schema does not invent stock, prices, or customer reviews', () =>
   }
 });
 
+test('homepage and collection schema describe categories without invalid product offers', () => {
+  const home = read('index.html');
+  const products = read('products.html');
+  for (const html of [home, products]) {
+    assert.doesNotMatch(html, /"@type":\s*"Product"/);
+    assert.doesNotMatch(html, /"@type":\s*"Offer"/);
+    assert.doesNotMatch(html, /"@type":\s*"OfferCatalog"/);
+  }
+  assert.match(home, /"knowsAbout"/);
+  assert.match(products, /"@type": "ItemList"/);
+  assert.match(products, /"@type": "WebPage"/);
+});
+
 test('pet apparel explains buyer-nominated 3PL delivery without promising warehousing', () => {
   const html = read('pet-apparel.html');
   assert.match(html, /buyer-nominated 3PL or fulfillment warehouse/i);
