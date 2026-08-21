@@ -43,3 +43,27 @@ test('pet apparel explains buyer-nominated 3PL delivery without promising wareho
   assert.match(html, /does not mean that warehousing or free storage is included/i);
   assert.match(html, /storage, fulfillment, international freight, duties and destination charges are confirmed separately/i);
 });
+
+test('cat tree pages have distinct search intents', () => {
+  const catalog = read('cat-tree.html');
+  const oem = read('cat-tree-oem.html');
+  const manufacturing = read('cat-tree-manufacturer.html');
+
+  assert.match(catalog, /<title>Wholesale Cat Trees &amp; Cat Furniture Catalog \| Entrol<\/title>/);
+  assert.match(catalog, /<h1[^>]*>Wholesale Cat Trees &amp; Cat Furniture<\/h1>/);
+  assert.doesNotMatch(catalog, /<title>[^<]*OEM Manufacturer/i);
+
+  assert.match(oem, /<title>Custom Cat Tree OEM &amp; Private Label Supplier \| Entrol<\/title>/);
+  assert.match(oem, /<h1[^>]*>Custom Cat Tree OEM &amp; Private Label Development<\/h1>/);
+
+  assert.match(manufacturing, /<title>Cat Tree Manufacturing Process &amp; Quality Control \| Entrol<\/title>/);
+  assert.match(manufacturing, /<h1>Cat Tree Manufacturing Process<br><em>&amp; Quality Control<\/em><\/h1>/);
+});
+
+test('pet bedding targets wholesale sourcing and asks for quote inputs', () => {
+  const html = read('pet-bedding.html');
+  assert.match(html, /<h1[^>]*>Wholesale Pet Beds &amp; Custom Bedding<\/h1>/);
+  assert.match(html, /Information needed for an accurate pet bed quotation/);
+  assert.match(html, /destination country and postal code/i);
+  assert.match(html, /product-specific availability, sample plan, MOQ, unit price, lead time and freight options/i);
+});
