@@ -67,3 +67,15 @@ test('pet bedding targets wholesale sourcing and asks for quote inputs', () => {
   assert.match(html, /destination country and postal code/i);
   assert.match(html, /product-specific availability, sample plan, MOQ, unit price, lead time and freight options/i);
 });
+
+test('dog toys is a visible B2B category without fixed commercial promises', () => {
+  const toys = read('dog-toys-oem.html');
+  const products = read('products.html');
+  const home = read('index.html');
+  assert.match(toys, /<h1>Wholesale Dog Toys<br><em>&amp; Custom Pet Toy Sourcing<\/em><\/h1>/);
+  assert.match(toys, /MOQ depends on the selected design, material, customization and packaging/i);
+  assert.doesNotMatch(toys, /low MOQ 200pcs/i);
+  assert.doesNotMatch(toys, /All toys tested to ASTM F963/i);
+  assert.match(products, /href="dog-toys-oem\.html">Dog Toys<\/a>/);
+  assert.match(home, /href="dog-toys-oem\.html">Dog Toys<\/a>/);
+});
