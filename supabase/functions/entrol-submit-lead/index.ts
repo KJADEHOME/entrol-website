@@ -1,12 +1,12 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { assessLeadAbuse } from "./anti-spam.mjs";
 
-type BusinessUnit = "pet_products" | "socks";
+type BusinessUnit = "pet_products" | "socks" | "kjadehome";
 
 type SiteConfig = {
   businessUnit: BusinessUnit;
-  sourceSite: "www.entrol.com" | "entrol.com" | "socks.entrol.com";
-  notificationLabel: "Entrol Pet Lead" | "Entrol Socks Lead";
+  sourceSite: "www.entrol.com" | "entrol.com" | "socks.entrol.com" | "www.kjadehome.com" | "kjadehome.com";
+  notificationLabel: "Entrol Pet Lead" | "Entrol Socks Lead" | "KJadeHome Lead";
   notificationIntro: string;
   notificationToEnv: "ENTROL_NOTIFICATION_TO" | "ENTROL_SOCKS_NOTIFICATION_TO";
   notificationFromEnv: "ENTROL_NOTIFICATION_FROM" | "ENTROL_SOCKS_NOTIFICATION_FROM";
@@ -42,6 +42,24 @@ const SITE_BY_ORIGIN: Readonly<Record<string, SiteConfig>> = Object.freeze({
     notificationToEnv: "ENTROL_SOCKS_NOTIFICATION_TO",
     notificationFromEnv: "ENTROL_SOCKS_NOTIFICATION_FROM",
     customerReplyFromEnv: "ENTROL_SOCKS_CUSTOMER_REPLY_FROM",
+  },
+  "https://www.kjadehome.com": {
+    businessUnit: "kjadehome",
+    sourceSite: "www.kjadehome.com",
+    notificationLabel: "KJadeHome Lead",
+    notificationIntro: "A new KJadeHome website lead was stored successfully.",
+    notificationToEnv: "ENTROL_NOTIFICATION_TO",
+    notificationFromEnv: "ENTROL_NOTIFICATION_FROM",
+    customerReplyFromEnv: "ENTROL_CUSTOMER_REPLY_FROM",
+  },
+  "https://kjadehome.com": {
+    businessUnit: "kjadehome",
+    sourceSite: "kjadehome.com",
+    notificationLabel: "KJadeHome Lead",
+    notificationIntro: "A new KJadeHome website lead was stored successfully.",
+    notificationToEnv: "ENTROL_NOTIFICATION_TO",
+    notificationFromEnv: "ENTROL_NOTIFICATION_FROM",
+    customerReplyFromEnv: "ENTROL_CUSTOMER_REPLY_FROM",
   },
 });
 
@@ -389,8 +407,55 @@ function socksCustomerReplyContent(row: ReplyLead) {
   return { subject, text, html };
 }
 
+function kjadehomeCustomerReplyContent(row: ReplyLead) {
+  const greetingName = row.name || row.company;
+  const greeting = greetingName ? `Hello ${greetingName},` : "Hello,";
+  const requestSummary = row.product_interest
+    ? `We have recorded your interest in: ${row.product_interest}.`
+    : "We have recorded your sourcing request.";
+  const subject = "We received your KJadeHome sourcing inquiry";
+  const siteUrl = "https://www.kjadehome.com/";
+  const contactUrl = "https://www.kjadehome.com/inquiry.html";
+  const text = [
+    greeting,
+    "",
+    "Thank you for contacting KJadeHome. Your inquiry has been received successfully, and our sourcing team will review it and reply within one business day.",
+    requestSummary,
+    "",
+    "To prepare a relevant quotation, please reply with the product references or photos, materials, dimensions, estimated quantities, destination country and postal code, customization requirements and required delivery date.",
+    "",
+    "MOQ, pricing, sample terms, production lead time and shipping options depend on the selected product and order requirements. They are not confirmed until our team sends a written quotation.",
+    "",
+    `Website: ${siteUrl}`,
+    `Contact page: ${contactUrl}`,
+    "Email: wangyan@entrol.com",
+    "",
+    "Best regards,",
+    "KJadeHome Sourcing Team",
+    "Weihai Yuanchuang Import & Export Co., Ltd.",
+  ].join("\n");
+  const html = `<!doctype html>
+<html lang="en"><body style="margin:0;background:#f4f7f9;font-family:Arial,sans-serif;color:#1f2d38">
+<div style="max-width:640px;margin:0 auto;padding:28px 18px">
+  <div style="background:#ffffff;border:1px solid #dde6ec;border-radius:14px;padding:30px">
+    <p style="margin:0 0 18px;font-size:16px">${escapeHtml(greeting)}</p>
+    <h1 style="margin:0 0 16px;color:#0b1f3a;font-size:24px">Thank you for contacting KJadeHome</h1>
+    <p style="margin:0 0 14px;line-height:1.65">Your inquiry has been received successfully. Our sourcing team will review it and reply within one business day.</p>
+    <p style="margin:0 0 20px;line-height:1.65">${escapeHtml(requestSummary)}</p>
+    <p style="margin:0 0 14px;line-height:1.65">To prepare a relevant quotation, please reply with the product references or photos, materials, dimensions, estimated quantities, destination country and postal code, customization requirements and required delivery date.</p>
+    <p style="margin:18px 0;padding:12px 14px;border-left:4px solid #c9a86a;background:#fff8e8;line-height:1.55"><strong>Quotation notice:</strong> MOQ, pricing, sample terms, production lead time and shipping options depend on the selected product and order requirements. They are not confirmed until our team sends a written quotation.</p>
+    <p style="margin:20px 0 0;line-height:1.65"><a href="${siteUrl}">KJadeHome website</a><br>Email: <a href="mailto:wangyan@entrol.com">wangyan@entrol.com</a><br><a href="${contactUrl}">Contact KJadeHome</a></p>
+    <p style="margin:24px 0 0;line-height:1.55">Best regards,<br><strong>KJadeHome Sourcing Team</strong><br>Weihai Yuanchuang Import &amp; Export Co., Ltd.</p>
+  </div>
+</div>
+</body></html>`;
+  return { subject, text, html };
+}
+
 function customerReplyContent(site: SiteConfig, row: ReplyLead) {
-  return site.businessUnit === "socks" ? socksCustomerReplyContent(row) : petCustomerReplyContent(row);
+  if (site.businessUnit === "socks") return socksCustomerReplyContent(row);
+  if (site.businessUnit === "kjadehome") return kjadehomeCustomerReplyContent(row);
+  return petCustomerReplyContent(row);
 }
 
 Deno.serve(async (req: Request) => {
@@ -518,9 +583,17 @@ Deno.serve(async (req: Request) => {
   const defaultNotificationFrom = Deno.env.get("ENTROL_NOTIFICATION_FROM") || "Entrol Leads <leads@updates.entrol.com>";
   const notificationTo = Deno.env.get(site.notificationToEnv) || defaultNotificationTo;
   const notificationFrom = Deno.env.get(site.notificationFromEnv)
-    || (site.businessUnit === "socks" ? senderWithDisplayName(defaultNotificationFrom, "Entrol Socks Leads") : defaultNotificationFrom);
+    || (site.businessUnit === "socks"
+      ? senderWithDisplayName(defaultNotificationFrom, "Entrol Socks Leads")
+      : site.businessUnit === "kjadehome"
+      ? senderWithDisplayName(defaultNotificationFrom, "KJadeHome Leads")
+      : defaultNotificationFrom);
   const customerReplyFrom = Deno.env.get(site.customerReplyFromEnv)
-    || (site.businessUnit === "socks" ? senderWithDisplayName(notificationFrom, "Entrol Socks Team") : notificationFrom);
+    || (site.businessUnit === "socks"
+      ? senderWithDisplayName(notificationFrom, "Entrol Socks Team")
+      : site.businessUnit === "kjadehome"
+      ? senderWithDisplayName(notificationFrom, "KJadeHome Sourcing Team")
+      : notificationFrom);
   let notificationStatus = "not_configured";
   let customerReplyStatus = row.email ? "not_configured" : "not_applicable";
 
