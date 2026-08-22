@@ -411,9 +411,22 @@ function entrolTrack(eventName, form) {
   var formType = form.classList.contains('catalog-form') || form.querySelector('[name="catalog_request"]')
     ? 'catalog'
     : 'inquiry';
-  if (window.dataLayer) window.dataLayer.push({ event: eventName, form_type: formType, page_path: window.location.pathname });
-  if (typeof gtag === 'function' && eventName === 'inquiry_success') {
-    gtag('event', 'generate_lead', { event_category: 'conversion', event_label: 'first_party_lead_api' });
+  var productField = form.querySelector('[name="product_interest"], [name="product-interest"], [name="product"], [name="product_type"]');
+  var productInterest = productField && typeof productField.value === 'string' ? productField.value : '';
+  var eventContext = {
+    form_type: formType,
+    page_path: window.location.pathname,
+    product_interest: productInterest || 'unspecified'
+  };
+  if (window.dataLayer) window.dataLayer.push(Object.assign({ event: eventName }, eventContext));
+  if (typeof gtag === 'function' && (eventName === 'inquiry_success' || eventName === 'catalog_success')) {
+    gtag('event', 'generate_lead', {
+      event_category: 'conversion',
+      event_label: formType === 'catalog' ? 'catalog_request_first_party_api' : 'inquiry_first_party_api',
+      form_type: formType,
+      page_path: eventContext.page_path,
+      product_interest: eventContext.product_interest
+    });
   }
   if (typeof plausible === 'function') plausible(eventName, { props: { source: formType, page: window.location.pathname } });
 }

@@ -57,6 +57,16 @@ test('site script tracks WhatsApp contact intent with placement context', () => 
   assert.match(script, /link_placement/);
 });
 
+test('successful first-party inquiry and catalog forms both generate a GA4 lead', () => {
+  const script = fs.readFileSync(path.join(root, 'script.js'), 'utf8');
+  assert.match(script, /eventName === 'inquiry_success' \|\| eventName === 'catalog_success'/);
+  assert.match(script, /gtag\('event', 'generate_lead'/);
+  assert.match(script, /catalog_request_first_party_api/);
+  assert.match(script, /inquiry_first_party_api/);
+  assert.match(script, /form_type: formType/);
+  assert.match(script, /product_interest: eventContext\.product_interest/);
+});
+
 test('privacy policy discloses optional Google Analytics and preference controls', () => {
   const html = fs.readFileSync(path.join(root, 'privacy-policy.html'), 'utf8');
   assert.match(html, /Google Analytics 4/);
