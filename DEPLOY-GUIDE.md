@@ -4,17 +4,13 @@
 
 ---
 
-## 第一步：联系表单确认（无需注册）
+## 第一步：联系表单确认
 
-> 表单已配置为 **Formsubmit.co**（与 kjadehome 同款），邮件直接发到 `wangyan@entrol.com`。
-> 免费版每月 50 次提交，B2B 询盘够用。无需额外注册，直接使用即可。
+> Entrol 表单使用自有第一方询盘接口，提交后由服务器保存来源、业务线和通知状态。
+> 宠物站与袜子站按照可信 Origin 分别标记为 `pet_products` 和 `socks`，邮件身份、自动回复及来源字段相互独立。
+> 内部询盘通知发送到 `wangyan@entrol.com`。
 
-表单代码已配置：
-```html
-<form action="https://formsubmit.co/wangyan@entrol.com" method="POST">
-```
-
-✅ **无需额外操作，跳过此步骤。**
+上线后必须分别测试宠物站和袜子站表单，并以数据库记录及实际收件结果为准；不能只凭页面成功提示或 HTTP 200 判断邮件已送达。
 
 ---
 
@@ -156,5 +152,4 @@ nslookup www.entrol.com
 
 ---
 
-*本手册由 WorkBuddy 生成 · 2026-04-04*
-> 表单使用 Formsubmit.co（同 kjadehome 方案），邮件发到 wangyan@entrol.com
+*本手册最初生成于 2026-04-04；询盘部分已按当前第一方接口更新。*

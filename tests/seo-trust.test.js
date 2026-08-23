@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const path = require('node:path');
 const test = require('node:test');
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
@@ -103,5 +104,21 @@ test('new sourcing categories are linked and keep commercial terms product-speci
     assert.match(html, /Request .* Quote|Request .*Quote/i);
     assert.match(html, /confirmed by SKU|confirmed for each selected product|confirmed by selected design/i);
     assert.match(products, new RegExp(`href="${file.replace('.', '\\.')}"`));
+  }
+});
+
+test('published Entrol pet pages do not reference the KJadeHome brand or domain', () => {
+  const publishedHtml = [
+    ...fs.readdirSync('.', { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
+      .map((entry) => entry.name),
+    ...fs.readdirSync('blog', { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
+      .map((entry) => path.join('blog', entry.name)),
+  ];
+
+  for (const file of publishedHtml) {
+    const html = fs.readFileSync(file, 'utf8');
+    assert.doesNotMatch(html, /kjadehome|kjade/iu, file);
   }
 });
