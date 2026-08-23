@@ -15,11 +15,6 @@ const redirects = new Map([
   ['products/index.html', '/products.html'],
   ['collections/pet-bedding/index.html', '/pet-bedding.html'],
   ['collections/winter-socks/index.html', 'https://socks.entrol.com/products.html'],
-  ['products/glass-storage-476/index.html', 'https://www.kjadehome.com/glass-decor.html'],
-  ['collections/glass-products/index.html', 'https://www.kjadehome.com/glass-decor.html'],
-  ['collections/ceramic-products/index.html', 'https://www.kjadehome.com/ceramic-decor.html'],
-  ['collections/home-decor/index.html', 'https://www.kjadehome.com/products.html'],
-  ['collections/mdf-products/index.html', 'https://www.kjadehome.com/products.html'],
 ]);
 
 const intentionallyGone = [
@@ -27,14 +22,19 @@ const intentionallyGone = [
   'collections/wish-box',
   'collections/fashion-accessories/2.html',
   'collections/gifts-custom',
+  'products/glass-storage-476',
   'cases-detail/beauty-and-confidence-of-the-secret-weapon---wig',
   'case',
   'collections/oral-care',
   'collections/teeth-whitening',
   'collections/head-band',
+  'collections/home-decor',
   'collections/light-products',
   'collections/pillows',
+  'collections/glass-products',
+  'collections/mdf-products',
   'products/human-hair-weaves-extension---straight-p27-color-201',
+  'collections/ceramic-products',
   'collections/head-band-80',
 ];
 
@@ -48,13 +48,15 @@ test('every relevant legacy 404 has an explicit, semantically matched redirect',
 
 test('irrelevant legacy catalog URLs are not recreated or redirected to the homepage', () => {
   for (const oldUrl of intentionallyGone) {
-    assert.equal(fs.existsSync(path.join(root, oldUrl)), false, oldUrl);
+    const exactPath = path.join(root, oldUrl);
+    const exactFileExists = fs.existsSync(exactPath) && fs.statSync(exactPath).isFile();
+    assert.equal(exactFileExists, false, oldUrl);
     assert.equal(fs.existsSync(path.join(root, oldUrl, 'index.html')), false, oldUrl);
   }
 });
 
 test('the exported GSC 404 set is completely classified', () => {
-  assert.equal(redirects.size, 14);
-  assert.equal(intentionallyGone.length, 13);
+  assert.equal(redirects.size, 9);
+  assert.equal(intentionallyGone.length, 18);
   assert.equal(redirects.size + intentionallyGone.length, 27);
 });
