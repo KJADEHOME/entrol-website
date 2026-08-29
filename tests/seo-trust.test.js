@@ -107,6 +107,23 @@ test('new sourcing categories are linked and keep commercial terms product-speci
   }
 });
 
+test('published pages do not contain malformed empty responsive media rules', () => {
+  const publishedHtml = [
+    ...fs.readdirSync('.', { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
+      .map((entry) => entry.name),
+    ...fs.readdirSync('blog', { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
+      .map((entry) => path.join('blog', entry.name)),
+  ];
+
+  const malformedMediaRule = /@media \([^\r\n]+\) \{ \([^\r\n]+\) \}/;
+  for (const file of publishedHtml) {
+    const html = fs.readFileSync(file, 'utf8');
+    assert.doesNotMatch(html, malformedMediaRule, file);
+  }
+});
+
 test('published Entrol pet pages do not reference the KJadeHome brand or domain', () => {
   const publishedHtml = [
     ...fs.readdirSync('.', { withFileTypes: true })
