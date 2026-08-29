@@ -107,6 +107,16 @@ test('new sourcing categories are linked and keep commercial terms product-speci
   }
 });
 
+test('homepage asks buyers for a quote-ready brief and prioritizes the hero image', () => {
+  const homepage = fs.readFileSync('index.html', 'utf8');
+
+  assert.match(homepage, /Start With Your Brief/);
+  assert.match(homepage, /name="company"/);
+  assert.match(homepage, /name="target_market"/);
+  assert.match(homepage, /class="hero-img" loading="eager" fetchpriority="high"/);
+  assert.equal((homepage.match(/"@type": "WebSite",\s*"@id": "https:\/\/www\.entrol\.com\/#website"/g) || []).length, 1);
+});
+
 test('published pages do not contain malformed empty responsive media rules', () => {
   const publishedHtml = [
     ...fs.readdirSync('.', { withFileTypes: true })
