@@ -27,7 +27,7 @@ test('score evidence is stored and included in internal notification and API res
   assert.match(source, /lead_score_reasons: leadScoring\.reasons/);
   assert.match(source, /Priority: \$\{leadScoring\.priority\}/);
   assert.match(source, /Lead score: \$\{leadScoring\.score\}\/100/);
-  assert.match(source, /\[\$\{leadScoring\.priority\} \$\{leadScoring\.score\}\] \[Entrol Lead\]/);
+  assert.match(source, /\[\$\{leadScoring\.priority\} \$\{leadScoring\.score\}\] \[\$\{site\.notificationLabel\}\]/);
 });
 
 test('scoring is advisory and does not change sales status or reject a lead', () => {
