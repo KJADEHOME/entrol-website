@@ -117,6 +117,24 @@ test('homepage asks buyers for a quote-ready brief and prioritizes the hero imag
   assert.equal((homepage.match(/"@type": "WebSite",\s*"@id": "https:\/\/www\.entrol\.com\/#website"/g) || []).length, 1);
 });
 
+test('homepage keeps manufacturing, audits and commercial terms product-specific', () => {
+  const homepage = fs.readFileSync('index.html', 'utf8');
+
+  assert.match(homepage, /Product-Matched Manufacturing/);
+  assert.match(homepage, /qualified partner facilities/i);
+  assert.match(homepage, /BSCI, WRAP or buyer-specific audit needs reviewed by facility and project/i);
+  assert.match(homepage, /MOQ is confirmed by product, material, size, color count, packaging and customization/i);
+  assert.match(homepage, /Sample and production lead times are confirmed by product construction/i);
+  assert.doesNotMatch(homepage, /Factory Direct Pricing/i);
+  assert.doesNotMatch(homepage, /Our MOQ starts from 200 units/i);
+  assert.doesNotMatch(homepage, /Standard production lead time is 25–35 days/i);
+  assert.equal((homepage.match(/<form\b/g) || []).length, 1);
+  assert.doesNotMatch(homepage, /getElementById\('catalog-email'\)/);
+  assert.match(homepage, /@media \(max-width: 900px\)[\s\S]*?\.hero-gateway[\s\S]*?grid-template-columns: 1fr/);
+  assert.match(homepage, /@media \(max-width: 560px\)[\s\S]*?\.trust-grid,[\s\S]*?\.solutions-grid,[\s\S]*?\.why-us-grid[\s\S]*?grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(homepage, /@media \(max-width: 768px\)[\s\S]*?\.catalog-inner[\s\S]*?grid-template-columns: minmax\(0, 1fr\)[\s\S]*?\.process-steps[\s\S]*?flex-direction: column/);
+});
+
 test('published pages do not contain malformed empty responsive media rules', () => {
   const publishedHtml = [
     ...fs.readdirSync('.', { withFileTypes: true })

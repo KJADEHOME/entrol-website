@@ -380,6 +380,22 @@
         border-color: #27AE60;
       }
 
+      @media (max-width: 900px) {
+        .hero-gateway {
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-top: 28px;
+        }
+        .gateway-card {
+          padding: 20px;
+          text-align: left;
+          align-items: flex-start;
+        }
+        .gateway-features {
+          margin-bottom: 12px;
+        }
+      }
+
       .hero-usps {
         list-style: none;
         padding: 0;
@@ -406,7 +422,7 @@
       <!-- 3 Core USPs -->
       <ul class="hero-usps reveal">
         <li><span class="usp-check">&#10003;</span> OEM / ODM Custom Design</li>
-        <li><span class="usp-check">&#10003;</span> Factory Direct Pricing</li>
+        <li><span class="usp-check">&#10003;</span> Product-Matched Manufacturing</li>
         <li><span class="usp-check">&#10003;</span> Global Shipping (US / Europe)</li>
       </ul>
     </div>
@@ -431,33 +447,9 @@
       </div>
       <div class="catalog-right">
         <a href="assets/Entrol-Pet-Products-Catalog-2026.pdf" download class="catalog-submit-btn" data-catalog-download style="display:block;text-align:center;text-decoration:none;margin-bottom:16px;">Download Catalog PDF &darr;</a>
-        <form data-entrol-lead="true" method="POST" class="catalog-form">
-          <input type="hidden" name="_subject" value="[Entrol] Catalog Download Request - Homepage">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_template" value="table">
-          <input type="hidden" name="_next" value="https://www.entrol.com/?catalog=sent">
-          <input type="hidden" name="catalog_request" value="Request pricing and MOQ for the 2026 pet products catalog">
-          <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
-            <label for="catalog-website">Leave this field empty</label>
-            <input type="text" name="website" id="catalog-website" tabindex="-1" autocomplete="off">
-          </div>
-          <label class="catalog-label" for="catalog-email">Request Pricing &amp; MOQ</label>
-          <div class="catalog-input-row">
-            <input type="email" name="email" id="catalog-email" class="catalog-email-input" placeholder="business@yourcompany.com" required>
-            <input type="text" name="name" class="catalog-email-input" placeholder="Contact name" autocomplete="name" required style="flex:0 0 40%;margin-top:8px;">
-            <input type="text" name="company" class="catalog-email-input" placeholder="Company (optional)" style="flex:0 0 40%;margin-top:8px;">
-            <select name="product_type" class="catalog-email-input" style="flex:0 0 40%;margin-top:8px;">
-              <option value="">Product interest (optional)</option>
-              <option>Cat Trees</option>
-              <option>Pet Apparel</option>
-              <option>Pet Bedding</option>
-              <option>Dog Toys</option>
-              <option>All Products</option>
-            </select>
-            <button type="submit" id="catalog" class="catalog-submit-btn" style="margin-top:8px;">Request Quote &rarr;</button>
-          </div>
-          <p class="catalog-privacy">&#x1f512; Business inquiry only &bull; No spam &bull; We typically reply within 24 hours</p>
-        </form>
+        <p class="catalog-label" style="margin:0 0 10px;">Found a relevant product?</p>
+        <p class="catalog-privacy" style="margin:0 0 16px;">Include its product code, target quantity, destination and customization needs for a product-specific quotation.</p>
+        <a href="#rfq-form-anchor" class="catalog-submit-btn" style="display:block;text-align:center;text-decoration:none;">Request Pricing With a Product Code &rarr;</a>
       </div>
     </div>
   </section>
@@ -491,8 +483,9 @@
   <section class="trust-section section">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-eyebrow">Our Factory</p>
-        <h2 class="section-title">Trusted OEM Pet Products Manufacturer &amp; Factory in China Since 2005</h2>
+        <p class="section-eyebrow">Manufacturing &amp; Sourcing Network</p>
+        <h2 class="section-title">Product-Matched Manufacturing Support for Pet Brands and Retail Buyers</h2>
+        <p style="max-width:820px;margin:18px auto 0;color:var(--color-text-mid);">Entrol coordinates direct production and qualified partner facilities according to the product category, construction, target market and required audit scope. Factory details, current audit documents and testing requirements are reviewed for each project before order confirmation.</p>
       </div>
       <div class="trust-grid">
         <div class="trust-card reveal">
@@ -519,6 +512,7 @@
       <div class="trust-badges reveal">
         <span class="trust-badge">OEM and ODM support</span>
         <span class="trust-badge">Serving brands, retailers and wholesalers</span>
+        <span class="trust-badge">BSCI, WRAP or buyer-specific audit needs reviewed by facility and project</span>
         <span class="trust-badge"><a href="products.html" style="color:inherit;text-decoration:underline;">Downloadable product catalog</a> with coded product references</span>
       </div>
     </div>
@@ -613,7 +607,7 @@
     <div class="container">
       <div class="section-header reveal">
         <p class="section-eyebrow">What We Make</p>
-        <h2 class="section-title">Pet Products that<br><em>Sell Themselves.</em></h2>
+        <h2 class="section-title">Core Pet Product<br><em>Development Categories</em></h2>
       </div>
       <div class="category-grid">
         <a href="cat-tree.html" class="cat-card reveal">
@@ -632,7 +626,7 @@
           </div>
           <div class="cat-card-body">
             <h3>Pet Apparel</h3>
-            <p>Sweaters, jackets & outfits — cozy fashion for cats and dogs, seasonal collections.</p>
+            <p>Sweaters, hoodies, rainwear, jackets and seasonal outfits for private-label programs.</p>
             <span class="cat-card-link">Explore &rarr;</span>
           </div>
         </a>
@@ -642,7 +636,7 @@
           </div>
           <div class="cat-card-body">
             <h3>Pet Bedding</h3>
-            <p>Beds, pads, cushions & sleepwear — engineered for comfort, crafted with care.</p>
+            <p>Beds, pads, cushions and pet sofas developed by construction, filling and packaging needs.</p>
             <span class="cat-card-link">Explore &rarr;</span>
           </div>
         </a>
@@ -720,12 +714,12 @@
         <div class="why-us-card reveal">
           <div class="why-us-icon">&#x2705;</div>
           <h3>Quality Control</h3>
-          <p>Multi-stage inspection: raw material check → inline QC → final AQL audit before every shipment.</p>
+          <p>Inspection scope is agreed by product and order, including material checks, inline inspection and pre-shipment review where required.</p>
         </div>
       </div>
     </div>
     <div class="text-center reveal" style="margin-top:32px">
-      <p style="color:var(--color-text-mid);margin-bottom:12px;font-size:0.95rem;">As a leading <strong>OEM pet products manufacturer</strong> and <strong>wholesale pet supplier</strong>, we&rsquo;re ready to bring your product vision to life.</p>
+      <p style="color:var(--color-text-mid);margin-bottom:12px;font-size:0.95rem;">Share your target product, quantity, market and compliance needs so our team can identify the appropriate production route.</p>
       <a href="contact.html" class="btn btn-primary">Talk to Our OEM Team &rarr;</a>
     </div>
   </section><!-- FAQ -->
@@ -738,7 +732,7 @@
       <div class="faq-list">
         <details class="faq-item reveal">
           <summary>What is your minimum order quantity (MOQ)?</summary>
-          <p>Our MOQ starts from 200 units per custom product. For existing cat tree designs, MOQ is typically 50–100 units depending on size, materials, and packaging. We also welcome qualified test orders on selected models.</p>
+          <p>MOQ is confirmed by product, material, size, color count, packaging and customization. Selected existing designs may support test orders, while custom developments are quoted after the specification is reviewed.</p>
         </details>
         <details class="faq-item reveal">
           <summary>Do you offer OEM and ODM services?</summary>
@@ -750,7 +744,7 @@
         </details>
         <details class="faq-item reveal">
           <summary>What is the typical lead time for production?</summary>
-          <p>Standard production lead time is 25–35 days after order confirmation and deposit. During peak seasons (Q3–Q4), we recommend placing orders 45–60 days in advance. Sample lead time is 7–10 days.</p>
+          <p>Sample and production lead times are confirmed by product construction, material availability, packaging, testing and seasonal capacity. The quotation will state the applicable schedule before development or production begins.</p>
         </details>
         <details class="faq-item reveal">
           <summary>Which countries do you export to?</summary>
@@ -758,7 +752,7 @@
         </details>
         <details class="faq-item reveal">
           <summary>Can I get a sample before placing a bulk order?</summary>
-          <p>Absolutely. We provide samples for quality evaluation. Sample fees depend on the product and are typically refundable against your first bulk order. We ship samples via DHL/FedEx, usually arriving within 5–7 business days.</p>
+          <p>Yes. Sample scope, cost, courier method and any refund arrangement are confirmed for the selected product before sampling. Buyers may also provide a valid DHL, FedEx or UPS account where appropriate.</p>
         </details>
       </div>
     </div>
@@ -775,7 +769,7 @@
         "name": "What is your minimum order quantity (MOQ)?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Our MOQ starts from 200 units per custom product. For existing cat tree designs, MOQ is typically 50–100 units depending on size, materials, and packaging. We also welcome qualified test orders on selected models."
+          "text": "MOQ is confirmed by product, material, size, color count, packaging and customization. Selected existing designs may support test orders, while custom developments are quoted after the specification is reviewed."
         }
       },
       {
@@ -799,7 +793,7 @@
         "name": "What is the typical lead time for production?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Standard production lead time is 25–35 days after order confirmation and deposit. During peak seasons (Q3–Q4), we recommend placing orders 45–60 days in advance. Sample lead time is 7–10 days."
+          "text": "Sample and production lead times are confirmed by product construction, material availability, packaging, testing and seasonal capacity. The quotation will state the applicable schedule before development or production begins."
         }
       },
       {
@@ -815,7 +809,7 @@
         "name": "Can I get a sample before placing a bulk order?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Absolutely. We provide samples for quality evaluation. Sample fees depend on the product and are typically refundable against your first bulk order. We ship samples via DHL/FedEx, usually arriving within 5–7 business days."
+          "text": "Yes. Sample scope, cost, courier method and any refund arrangement are confirmed for the selected product before sampling. Buyers may also provide a valid DHL, FedEx or UPS account where appropriate."
         }
       }
     ]
@@ -884,8 +878,12 @@
           <input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_template" value="table">
           <input type="hidden" name="_next" value="https://www.entrol.com/?sent=1">
+          <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
+            <label for="rfq-website">Leave this field empty</label>
+            <input type="text" name="website" id="rfq-website" tabindex="-1" autocomplete="off">
+          </div>
           <div class="rfq-grid">
-            <input type="text" name="name" class="rfq-input" placeholder="Your Name *" required>
+            <input type="text" name="name" class="rfq-input" placeholder="Your Name *" autocomplete="name" required>
             <input type="email" name="email" class="rfq-input" placeholder="Email Address *" required>
             <input type="text" name="company" class="rfq-input" placeholder="Company / Brand">
             <select name="product" class="rfq-input" required>
@@ -921,9 +919,9 @@
     <a href="mailto:wangyan@entrol.com?subject=OEM%20Pet%20Products%20Inquiry" class="sticky-btn sticky-email" aria-label="Email Entrol about OEM pet products">
       &#x2709;&#xfe0f; <span>Email Us</span>
     </a>
-    <button class="sticky-btn sticky-catalog" onclick="document.getElementById('catalog-email').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('catalog-email').focus()},500);">
+    <a href="assets/Entrol-Pet-Products-Catalog-2026.pdf" download class="sticky-btn sticky-catalog" data-catalog-download>
       &#x1f4d6; <span>Catalog</span>
-    </button>
+    </a>
   </div>
 
   <!-- FOOTER -->
@@ -1245,6 +1243,19 @@
   line-height: 1.6;
   margin: 0;
 }
+@media (max-width: 980px) {
+  .trust-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .solutions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .why-us-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .trust-grid,
+  .solutions-grid,
+  .why-us-grid { grid-template-columns: minmax(0, 1fr); }
+  .trust-card,
+  .solution-card,
+  .why-us-card { padding: 24px 20px; }
+}
 
 /* ============ SCREEN 6: OEM Ordering Process ============ */
 .process-section {
@@ -1322,6 +1333,27 @@
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   align-items: center;
+}
+@media (max-width: 768px) {
+  .catalog-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .catalog-left,
+  .catalog-right { min-width: 0; }
+  .process-steps {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  .process-step {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 16px;
+    text-align: left;
+    padding: 0;
+  }
+  .process-arrow { display: none; }
 }
 .catalog-icon-big {
   font-size: 3.2rem;

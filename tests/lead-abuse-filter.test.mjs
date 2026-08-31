@@ -3,7 +3,7 @@ import test from "node:test";
 import { assessLeadAbuse } from "../supabase/functions/entrol-submit-lead/anti-spam.mjs";
 import fs from "node:fs";
 
-test("homepage catalog quote form includes the server-side honeypot and requires a contact name", () => {
+test("homepage RFQ form includes the server-side honeypot and requires a contact name", () => {
   const html = fs.readFileSync("index.html", "utf8");
   assert.match(html, /name="website"[^>]*tabindex="-1"[^>]*autocomplete="off"/);
   assert.match(html, /name="name"[^>]*autocomplete="name"[^>]*required/);
