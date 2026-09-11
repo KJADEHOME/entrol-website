@@ -2,6 +2,63 @@
    ENTSOL Website — script.js
    ===================================================== */
 
+// Keep the Products navigation identical across legacy and newer page templates.
+// Blog articles live one directory deeper, so links are resolved from the current page.
+(function syncProductNavigation() {
+  const inBlog = window.location.pathname.replace(/\\/g, '/').includes('/blog/');
+  const prefix = inBlog ? '../' : '';
+  const products = [
+    ['Cat Trees', 'cat-tree.html'],
+    ['Cat Tree OEM', 'cat-tree-oem.html'],
+    ['Sourcing Guide', 'cat-tree-sourcing-guide.html'],
+    ['Pet Apparel', 'pet-apparel.html'],
+    ['Pet Bedding', 'pet-bedding.html'],
+    ['Dog Toys', 'dog-toys-oem.html'],
+    ['Pet Feeding', 'pet-feeding.html'],
+    ['Pet Grooming', 'pet-grooming.html'],
+    ['Pet Travel', 'pet-travel.html'],
+    ['Pet Leashes', 'pet-leashes.html']
+  ];
+
+  const desktopProducts = Array.from(document.querySelectorAll('.nav-links > .dropdown'))
+    .find(item => {
+      const trigger = item.querySelector(':scope > a');
+      return trigger && trigger.textContent.trim().toLowerCase().startsWith('products');
+    });
+  const desktopMenu = desktopProducts && desktopProducts.querySelector(':scope > .dropdown-menu');
+  if (desktopMenu) {
+    desktopMenu.replaceChildren(...products.map(([label, path]) => {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = prefix + path;
+      link.textContent = label;
+      item.appendChild(link);
+      return item;
+    }));
+  }
+
+  const mobileMenu = document.querySelector('.mobile-menu');
+  if (!mobileMenu) return;
+  const productPaths = new Set(products.map(([, path]) => path));
+  Array.from(mobileMenu.querySelectorAll(':scope > a')).forEach(link => {
+    const href = link.getAttribute('href') || '';
+    const path = href.split(/[?#]/)[0].replace(/^\.\.\//, '');
+    if (productPaths.has(path)) link.remove();
+  });
+
+  const productsLink = Array.from(mobileMenu.querySelectorAll(':scope > a'))
+    .find(link => link.textContent.trim().toLowerCase() === 'products');
+  if (!productsLink) return;
+  let insertionPoint = productsLink;
+  products.forEach(([label, path]) => {
+    const link = document.createElement('a');
+    link.href = prefix + path;
+    link.textContent = label;
+    insertionPoint.insertAdjacentElement('afterend', link);
+    insertionPoint = link;
+  });
+})();
+
 // ── NAV scroll effect ──────────────────────────────────
 const nav = document.querySelector('.nav');
 const handleScroll = () => {
