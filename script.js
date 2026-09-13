@@ -346,16 +346,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // The redirect is the authoritative client-side confirmation that the provider accepted a submission.
+  // Legacy return markers are retained only for diagnostics. Conversion events are
+  // emitted by entrolSubmitLead after durable storage succeeds, never from a URL flag.
   if (params.get('sent') === '1') {
-    if (window.dataLayer) window.dataLayer.push({ event: 'inquiry_success', page_path: window.location.pathname });
-    if (typeof gtag === 'function') gtag('event', 'generate_lead', { event_category: 'conversion', event_label: 'formsubmit_success' });
-    if (typeof plausible === 'function') plausible('inquiry_success', { props: { page: window.location.pathname } });
+    if (window.dataLayer) window.dataLayer.push({ event: 'legacy_form_return', page_path: window.location.pathname });
   }
   if (params.get('catalog') === 'sent') {
-    if (window.dataLayer) window.dataLayer.push({ event: 'catalog_success', page_path: window.location.pathname });
-    if (typeof gtag === 'function') gtag('event', 'generate_lead', { event_category: 'conversion', event_label: 'catalog_download' });
-    if (typeof plausible === 'function') plausible('catalog_success', { props: { page: window.location.pathname } });
+    if (window.dataLayer) window.dataLayer.push({ event: 'legacy_catalog_return', page_path: window.location.pathname });
   }
   document.querySelectorAll('[data-catalog-download]').forEach(function(link) {
     link.addEventListener('click', function() {
@@ -504,6 +501,7 @@ function entrolFormMessage(form, message, isError) {
 }
 
 async function entrolSubmitLead(form) {
+  if (window.EntrolPetProjectBrief && !window.EntrolPetProjectBrief.canSubmit(form)) return;
   var button = form.querySelector('button[type="submit"], input[type="submit"]');
   var originalText = button ? (button.textContent || button.value) : '';
   if (button) {
@@ -558,7 +556,14 @@ async function entrolSubmitLead(form) {
     entrolFormMessage(form, fields.submission_type === 'catalog'
       ? 'Request received. Our team will send the catalog to your business email.'
       : 'Inquiry received. Our team will contact you within 24 hours.', false);
-    entrolTrack(fields.submission_type === 'catalog' ? 'catalog_success' : 'inquiry_success', form);
+    // A duplicate request or spam honeypot may be acknowledged without creating
+    // a new durable row. Count a conversion only when the API explicitly confirms
+    // that this request created stored lead data.
+    var storedLead = result.stored === true
+      || (result.stored !== false && result.duplicate === false && typeof result.lead_id === 'string' && result.lead_id.length > 0);
+    if (storedLead) {
+      entrolTrack(fields.submission_type === 'catalog' ? 'catalog_success' : 'inquiry_success', form);
+    }
   } catch (error) {
     console.error('Entrol lead submission failed:', error);
     entrolFormMessage(form, 'We could not save your inquiry. Please retry, email wangyan@entrol.com, or contact us on WhatsApp.', true);
@@ -580,3 +585,16 @@ document.addEventListener('submit', function(event) {
   event.stopImmediatePropagation();
   entrolSubmitLead(form);
 }, true);
+
+// Load the pet project brief and compatibility gate on every existing lead form.
+// Keeping this as a shared module avoids duplicating validation markup across legacy pages.
+(function loadPetProjectBrief() {
+  var validator = document.createElement('script');
+  validator.src = '/pet-project-validator.js';
+  validator.onload = function() {
+    var ui = document.createElement('script');
+    ui.src = '/pet-project-brief.js';
+    document.head.appendChild(ui);
+  };
+  document.head.appendChild(validator);
+})();

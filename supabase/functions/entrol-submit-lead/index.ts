@@ -483,7 +483,7 @@ Deno.serve(async (req: Request) => {
     return jsonResponse(origin, { ok: false, error: code }, code === "payload_too_large" ? 413 : 400);
   }
 
-  if (clean(payload.website, 200)) return jsonResponse(origin, { ok: true }, 202);
+  if (clean(payload.website, 200)) return jsonResponse(origin, { ok: true, stored: false }, 202);
 
   const requestIdText = clean(payload.request_id, 36);
   if (!requestIdText || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestIdText)) {
@@ -572,7 +572,7 @@ Deno.serve(async (req: Request) => {
   const row = { ...normalizedLead, raw_payload: scoredPayload };
 
   const { data, error } = await admin.from("entrol_leads").insert(row).select("id").single();
-  if (error?.code === "23505") return jsonResponse(origin, { ok: true, duplicate: true }, 200);
+  if (error?.code === "23505") return jsonResponse(origin, { ok: true, stored: false, duplicate: true }, 200);
   if (error) {
     console.error("lead_insert_failed", error.code, error.message);
     return jsonResponse(origin, { ok: false, error: "storage_failed" }, 500);
@@ -709,6 +709,7 @@ Deno.serve(async (req: Request) => {
 
   return jsonResponse(origin, {
     ok: true,
+    stored: true,
     lead_id: data.id,
     duplicate: false,
     is_spam: isQuarantined,
