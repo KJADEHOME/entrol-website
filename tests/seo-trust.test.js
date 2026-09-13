@@ -107,6 +107,15 @@ test('new sourcing categories are linked and keep commercial terms product-speci
   }
 });
 
+test('new product categories reinforce crawl discovery with contextual internal links', () => {
+  const feeding = read('pet-feeding.html');
+  const grooming = read('pet-grooming.html');
+  const travel = read('pet-travel.html');
+  assert.match(feeding, /href="pet-grooming\.html">Pet Grooming Supplies<\/a>/);
+  assert.match(grooming, /href="pet-feeding\.html">Pet Bowls, Slow Feeders &amp; Lick Mats<\/a>/);
+  assert.match(travel, /href="pet-leashes\.html">Dog Leashes, Collars &amp; Harnesses<\/a>/);
+});
+
 test('homepage asks buyers for a quote-ready brief and prioritizes the hero image', () => {
   const homepage = fs.readFileSync('index.html', 'utf8');
 
