@@ -129,7 +129,9 @@
     summary.name = 'pet_project_summary';
     panel.appendChild(summary);
     var submit = form.querySelector('button[type="submit"], input[type="submit"]');
-    form.insertBefore(panel, submit || null);
+    var insertionPoint = submit;
+    while (insertionPoint && insertionPoint.parentNode !== form) insertionPoint = insertionPoint.parentNode;
+    form.insertBefore(panel, insertionPoint || null);
     form.addEventListener('input', function (event) { if (!event.target.classList.contains('pet-risk-ack')) update(form); });
     form.addEventListener('change', function (event) { if (!event.target.classList.contains('pet-risk-ack')) update(form); });
     update(form);

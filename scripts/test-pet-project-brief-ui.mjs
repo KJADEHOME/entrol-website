@@ -15,7 +15,7 @@ assert.ok(executablePath, 'Chrome or Edge is required for the UI regression test
 const browser = await chromium.launch({ headless: true, executablePath });
 const page = await browser.newPage();
 await page.setContent(`<!doctype html><html><head></head><body>
-  <form data-entrol-lead="true"><select name="product"><option>Pet Apparel</option></select><textarea name="message"></textarea><button type="submit">Send</button></form>
+  <form data-entrol-lead="true"><select name="product"><option>Pet Apparel</option></select><textarea name="message"></textarea><div class="submit-row"><button type="submit">Send</button></div></form>
 </body></html>`);
 await page.addStyleTag({ path: path.join(here, '..', 'styles.css') });
 await page.addScriptTag({ path: path.join(here, '..', 'pet-project-validator.js') });
