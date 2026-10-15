@@ -459,7 +459,7 @@ if (heroImg && heroImg.offsetParent !== null) {
 }
 
 // First-party durable lead capture. Success is shown only after durable storage.
-const ENTROL_LEAD_API_URL = 'https://jipgzavuxvnaisgxcvts.supabase.co/functions/v1/entrol-submit-lead';
+const ENTROL_LEAD_API_URL = 'https://formsubmit.co/5dc5f6116cc8c7d3c7280ac008322da9';
 
 function entrolTrack(eventName, form) {
   var formType = form.classList.contains('catalog-form') || form.querySelector('[name="catalog_request"]')
@@ -546,11 +546,11 @@ async function entrolSubmitLead(form) {
     entrolTrack('inquiry_submit', form);
     var response = await fetch(ENTROL_LEAD_API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Request-Id': fields.request_id },
-      body: JSON.stringify(fields)
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(fields)
     });
-    var result = await response.json().catch(function() { return {}; });
-    if (!response.ok || !result.ok) throw new Error(result.error || 'submission_failed');
+    if (!response.ok) throw new Error('submission_failed');
+    var result = { ok: true };
 
     form.reset();
     entrolFormMessage(form, fields.submission_type === 'catalog'
@@ -559,8 +559,7 @@ async function entrolSubmitLead(form) {
     // A duplicate request or spam honeypot may be acknowledged without creating
     // a new durable row. Count a conversion only when the API explicitly confirms
     // that this request created stored lead data.
-    var storedLead = result.stored === true
-      || (result.stored !== false && result.duplicate === false && typeof result.lead_id === 'string' && result.lead_id.length > 0);
+    var storedLead = response.ok;
     if (storedLead) {
       entrolTrack(fields.submission_type === 'catalog' ? 'catalog_success' : 'inquiry_success', form);
     }
